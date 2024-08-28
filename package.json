@@ -3,13 +3,14 @@
   "version": "0.0.1",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "rm -r ./dist; tsc",
     "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
-    "format": "prettier --write \"src/**/*.{ts,tsx}\""  
+    "format": "prettier --write \"src/**/*.{ts,tsx}\""
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240821.1",
     "@eslint/js": "^9.9.1",
     "@types/node": "^22.5.0",
     "@typescript-eslint/eslint-plugin": "^8.3.0",
