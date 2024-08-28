@@ -1,1 +1,1 @@
-console.log('it compiles!');
+console.log("it compiles!");
