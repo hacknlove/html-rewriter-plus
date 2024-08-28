@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "main": "dist/index.js",
   "scripts": {
-    "build": "rm -r ./dist; tsc",
+    "build:commonjs": "rm -r ./dist/commonjs; tsc --project tsconfig.commonjs.json",
+    "build:esm": "rm -r ./dist/esm; tsc --project tsconfig.esm.json",
+    "build": "npm run build:commonjs; npm run build:esm",
     "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
