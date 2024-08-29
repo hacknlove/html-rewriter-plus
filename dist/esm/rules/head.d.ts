@@ -1,2 +1,3 @@
 import { HTMLRewriter } from "@cloudflare/workers-types";
-export declare function ssrHead(rewriter: HTMLRewriter, data: any): void;
+import { RewriterContext } from "types";
+export declare function ssrHead(rewriter: HTMLRewriter, rewriterContext: RewriterContext): void;

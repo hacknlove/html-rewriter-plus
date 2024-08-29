@@ -10,18 +10,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ssrEnd = ssrEnd;
-function ssrEnd(rewriter, data) {
+function ssrEnd(rewriter, rewriterContext) {
     rewriter.onDocument({
         end(end) {
             return __awaiter(this, void 0, void 0, function* () {
                 try {
-                    yield Promise.all(Object.values(data.data));
+                    yield Promise.all(Object.values(rewriterContext.data));
                 }
                 catch (error) {
                     console.error(error);
                 }
                 const code = "<script>window.data=" +
-                    JSON.stringify(data.clientSideData) +
+                    JSON.stringify(rewriterContext.clientSideData) +
                     ";document.dispatchEvent(new Event('on-data-loaded'))</script>";
                 end.append(code, { html: true });
             });

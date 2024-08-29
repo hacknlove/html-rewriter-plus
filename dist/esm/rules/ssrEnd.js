@@ -1,17 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ssrEnd = ssrEnd;
-function ssrEnd(rewriter, data) {
+function ssrEnd(rewriter, rewriterContext) {
     rewriter.onDocument({
         async end(end) {
             try {
-                await Promise.all(Object.values(data.data));
+                await Promise.all(Object.values(rewriterContext.data));
             }
             catch (error) {
                 console.error(error);
             }
             const code = "<script>window.data=" +
-                JSON.stringify(data.clientSideData) +
+                JSON.stringify(rewriterContext.clientSideData) +
                 ";document.dispatchEvent(new Event('on-data-loaded'))</script>";
             end.append(code, { html: true });
         },

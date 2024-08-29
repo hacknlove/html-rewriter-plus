@@ -1,2 +1,3 @@
 import { HTMLRewriter } from "@cloudflare/workers-types";
-export declare function rewriterFactory(data: any): HTMLRewriter;
+import { RewriterContext } from "types";
+export declare function rewriterFactory(rewriterContext: RewriterContext): HTMLRewriter;

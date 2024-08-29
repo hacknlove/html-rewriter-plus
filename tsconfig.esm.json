@@ -13,6 +13,7 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    "moduleResolution": "NodeNext"
+    "moduleResolution": "NodeNext",
+    "typeRoots": ["node_modules/@types", "types.d.ts"],
   }
 }

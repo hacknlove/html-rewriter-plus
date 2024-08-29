@@ -1,16 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ssrHead = ssrHead;
-function ssrHead(rewriter, data) {
+function ssrHead(rewriter, rewriterContext) {
     rewriter.on("head", {
         element(element) {
-            data.headElements = [];
+            rewriterContext.headElements = [];
             element.onEndTag(async (endTag) => {
-                const elements = await Promise.all(data.headElements);
+                const elements = await Promise.all(rewriterContext.headElements);
                 for (const element of elements) {
                     endTag.before(element, { html: true });
                 }
-                data.headElements = false;
+                rewriterContext.headElements = null;
             });
         },
     });

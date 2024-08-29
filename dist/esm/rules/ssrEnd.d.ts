@@ -1,2 +1,3 @@
 import { HTMLRewriter } from "@cloudflare/workers-types";
-export declare function ssrEnd(rewriter: HTMLRewriter, data: any): void;
+import { RewriterContext } from "types";
+export declare function ssrEnd(rewriter: HTMLRewriter, rewriterContext: RewriterContext): void;

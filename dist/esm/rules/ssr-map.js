@@ -2,11 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ssrMap = ssrMap;
 const resolve_1 = require("@/resolve");
-async function ssrMapHeader(data, type, map, attributes) {
+async function ssrMapHeader(rewriterContext, type, map, attributes) {
     let element = `<${type} `;
     let innerHTML = "";
     for (const [, field, attribute] of map.matchAll(/([.\w]+):([^,]+)/g)) {
-        const value = await (0, resolve_1.resolve)(data.data, field);
+        const value = await (0, resolve_1.resolve)(rewriterContext.data, field);
         if (value === undefined) {
             attributes["data-ssr-error"] = `field ${field} not found in data`;
             continue;
@@ -28,19 +28,18 @@ async function ssrMapHeader(data, type, map, attributes) {
     }
     return element + ">" + innerHTML + "</" + type + ">";
 }
-function ssrMap(rewriter, data) {
+function ssrMap(rewriter, rewriterContext) {
     rewriter.on("[data-ssr-map]", {
         async element(element) {
             const map = element.getAttribute("data-ssr-map");
             element.removeAttribute("data-ssr-map");
-            // onHead it deferred
-            if (data.onHead) {
-                data.headElements.push(ssrMapHeader(data, element.tagName, map, Object.fromEntries(element.attributes)));
+            if (rewriterContext.headElements) {
+                rewriterContext.headElements.push(ssrMapHeader(rewriterContext, element.tagName, map, Object.fromEntries(element.attributes)));
                 element.remove();
                 return;
             }
             for (const [, field, attribute] of map.matchAll(/([.\w]+):([^,]+)/g)) {
-                const value = await (0, resolve_1.resolve)(data.data, field);
+                const value = await (0, resolve_1.resolve)(rewriterContext.data, field);
                 if (value === undefined) {
                     element.setAttribute("data-ssr-error", `field ${field} not found in data`);
                     continue;

@@ -14,6 +14,7 @@
       "@/*": ["src/*"]
     },
     "target": "es2015",
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "typeRoots": ["node_modules/@types", "types.d.ts"],
   }
 }

@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ssrStyleDataSsrCssVars = ssrStyleDataSsrCssVars;
 const resolve_1 = require("../resolve");
-function ssrStyleMapHeader(data, vars, attributes) {
+function ssrStyleMapHeader(rewriterContext, vars, attributes) {
     return __awaiter(this, void 0, void 0, function* () {
         let element = "<style ";
         for (const key in attributes) {
@@ -19,7 +19,7 @@ function ssrStyleMapHeader(data, vars, attributes) {
         }
         element += ">:root{";
         for (const [, field, key] of vars.matchAll(/([.\w]+):([^,]+)/g)) {
-            const value = yield (0, resolve_1.resolve)(data.data, field);
+            const value = yield (0, resolve_1.resolve)(rewriterContext.data, field);
             if (value === undefined) {
                 attributes["data-ssr-error"] = `field ${field} not found in data`;
                 continue;
@@ -29,13 +29,13 @@ function ssrStyleMapHeader(data, vars, attributes) {
         return element + "}</style>";
     });
 }
-function ssrStyleDataSsrCssVars(rewriter, data) {
+function ssrStyleDataSsrCssVars(rewriter, rewriterContext) {
     rewriter.on("ssr-style[data-ssr-css-vars]", {
         element(element) {
             return __awaiter(this, void 0, void 0, function* () {
                 const vars = element.getAttribute("data-ssr-css-vars");
-                if (data.headElements) {
-                    data.headElements.push(ssrStyleMapHeader(data, vars, Object.fromEntries(element.attributes)));
+                if (rewriterContext.headElements) {
+                    rewriterContext.headElements.push(ssrStyleMapHeader(rewriterContext, vars, Object.fromEntries(element.attributes)));
                     element.remove();
                     return;
                 }
@@ -43,7 +43,7 @@ function ssrStyleDataSsrCssVars(rewriter, data) {
                  */
                 let style = "";
                 for (const [, field, attribute] of vars.matchAll(/([.\w]+):([^,]+)/g)) {
-                    const value = yield (0, resolve_1.resolve)(data.data, field);
+                    const value = yield (0, resolve_1.resolve)(rewriterContext.data, field);
                     if (value === undefined) {
                         element.setAttribute("data-ssr-error", `field ${field} not found in data`);
                         continue;

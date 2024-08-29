@@ -11,13 +11,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ssrIf = ssrIf;
 const resolve_1 = require("../resolve");
-function ssrIf(rewriter, data) {
+function ssrIf(rewriter, rewriterContext) {
     rewriter.on("[data-ssr-if]", {
         element(element) {
             return __awaiter(this, void 0, void 0, function* () {
                 const field = element.getAttribute("data-ssr-if");
                 element.removeAttribute("data-ssr-if");
-                const value = yield (0, resolve_1.resolve)(data, field);
+                const value = yield (0, resolve_1.resolve)(rewriterContext, field);
                 if (!value) {
                     element.remove();
                 }

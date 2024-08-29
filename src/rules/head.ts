@@ -1,16 +1,22 @@
 import { HTMLRewriter } from "@cloudflare/workers-types";
+import { RewriterContext } from "types";
 
-export function ssrHead(rewriter: HTMLRewriter, data: any) {
+export function ssrHead(
+  rewriter: HTMLRewriter,
+  rewriterContext: RewriterContext,
+) {
   rewriter.on("head", {
     element(element) {
-      data.headElements = [];
+      rewriterContext.headElements = [] as Array<Promise<string>>;
 
       element.onEndTag(async (endTag) => {
-        const elements = await Promise.all(data.headElements);
+        const elements = await Promise.all(
+          rewriterContext.headElements as Array<Promise<string>>,
+        );
         for (const element of elements) {
           endTag.before(element, { html: true });
         }
-        data.headElements = false;
+        rewriterContext.headElements = null;
       });
     },
   });

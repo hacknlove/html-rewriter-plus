@@ -11,12 +11,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ssrMap = ssrMap;
 const resolve_1 = require("@/resolve");
-function ssrMapHeader(data, type, map, attributes) {
+function ssrMapHeader(rewriterContext, type, map, attributes) {
     return __awaiter(this, void 0, void 0, function* () {
         let element = `<${type} `;
         let innerHTML = "";
         for (const [, field, attribute] of map.matchAll(/([.\w]+):([^,]+)/g)) {
-            const value = yield (0, resolve_1.resolve)(data.data, field);
+            const value = yield (0, resolve_1.resolve)(rewriterContext.data, field);
             if (value === undefined) {
                 attributes["data-ssr-error"] = `field ${field} not found in data`;
                 continue;
@@ -39,20 +39,19 @@ function ssrMapHeader(data, type, map, attributes) {
         return element + ">" + innerHTML + "</" + type + ">";
     });
 }
-function ssrMap(rewriter, data) {
+function ssrMap(rewriter, rewriterContext) {
     rewriter.on("[data-ssr-map]", {
         element(element) {
             return __awaiter(this, void 0, void 0, function* () {
                 const map = element.getAttribute("data-ssr-map");
                 element.removeAttribute("data-ssr-map");
-                // onHead it deferred
-                if (data.onHead) {
-                    data.headElements.push(ssrMapHeader(data, element.tagName, map, Object.fromEntries(element.attributes)));
+                if (rewriterContext.headElements) {
+                    rewriterContext.headElements.push(ssrMapHeader(rewriterContext, element.tagName, map, Object.fromEntries(element.attributes)));
                     element.remove();
                     return;
                 }
                 for (const [, field, attribute] of map.matchAll(/([.\w]+):([^,]+)/g)) {
-                    const value = yield (0, resolve_1.resolve)(data.data, field);
+                    const value = yield (0, resolve_1.resolve)(rewriterContext.data, field);
                     if (value === undefined) {
                         element.setAttribute("data-ssr-error", `field ${field} not found in data`);
                         continue;

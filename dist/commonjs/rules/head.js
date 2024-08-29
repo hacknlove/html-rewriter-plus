@@ -10,16 +10,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ssrHead = ssrHead;
-function ssrHead(rewriter, data) {
+function ssrHead(rewriter, rewriterContext) {
     rewriter.on("head", {
         element(element) {
-            data.headElements = [];
+            rewriterContext.headElements = [];
             element.onEndTag((endTag) => __awaiter(this, void 0, void 0, function* () {
-                const elements = yield Promise.all(data.headElements);
+                const elements = yield Promise.all(rewriterContext.headElements);
                 for (const element of elements) {
                     endTag.before(element, { html: true });
                 }
-                data.headElements = false;
+                rewriterContext.headElements = null;
             }));
         },
     });
