@@ -3,7 +3,7 @@ import {
   Response as CFResponse,
 } from "@cloudflare/workers-types";
 
-export type AfterwardFunction = (
+export type PostwareFunction = (
   context: EventContext<any, any, any>,
   response: Response,
 ) => Promise<Response | void>;
@@ -19,7 +19,7 @@ export type RewriterContext = {
   data: Record<string, any>;
   flags: Record<string, any>;
   clientSideData: Record<string, any>;
-  end: Array<AfterwardFunction>;
+  postware: Array<PostwareFunction>;
   template: string;
 };
 

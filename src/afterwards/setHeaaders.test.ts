@@ -11,8 +11,8 @@ describe("setHeaders", () => {
     const response = new Response();
     const cfContext = {} as EventContext<any, any, any>;
 
-    const afterward = setHeaders(key, value);
-    await afterward(cfContext, response);
+    const postware = setHeaders(key, value);
+    await postware(cfContext, response);
 
     expect(response.headers.get(key)).toBe(value);
   });

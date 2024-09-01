@@ -1,16 +1,16 @@
 import { EventContext } from "@cloudflare/workers-types";
-import { AfterwardFunction, CommonResponse } from "types";
+import { PostwareFunction, CommonResponse } from "types";
 
-export async function runAfterWards(
+export async function runPostwares(
   context: EventContext<any, any, any>,
   inputResponse: CommonResponse,
-  afterwards: Array<AfterwardFunction>,
+  postwares: Array<PostwareFunction>,
 ) {
   let outputResponse = new Response(inputResponse.body, inputResponse);
 
-  for (const afterwardFunction of afterwards) {
+  for (const postwareFunction of postwares) {
     outputResponse =
-      (await afterwardFunction(context, outputResponse)) || outputResponse;
+      (await postwareFunction(context, outputResponse)) || outputResponse;
   }
   return outputResponse;
 }

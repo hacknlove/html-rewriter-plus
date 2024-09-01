@@ -1,18 +1,19 @@
 import { EventContext } from "@cloudflare/workers-types";
 import {
-  AfterwardFunction,
+  PostwareFunction,
   MiddlewareFunction,
   RewriterContext,
   CommonResponse,
 } from "types";
-import { runAfterWards } from "./afterwards";
+import { runPostwares } from "./postwares";
 import { isWebsocket } from "./isWebsocket";
 import { rewriterFactory } from "./rewriter";
 export function onRequestFactory({
   template = "",
   middlewares = [] as Array<MiddlewareFunction>,
-  afterwards = [] as Array<AfterwardFunction>,
-  end = [],
+  data = {},
+  clientSideData = {},
+  postware = [] as Array<PostwareFunction>,
 }) {
   return async (cfContext: EventContext<any, any, any>) => {
     if (isWebsocket(cfContext)) {
@@ -23,10 +24,10 @@ export function onRequestFactory({
       pageRequest: template
         ? cfContext.env.ASSETS.fetch(new URL(template, cfContext.request.url))
         : null,
-      data: {},
+      data,
       flags: {},
-      clientSideData: {},
-      end: end,
+      clientSideData,
+      postware: postware,
       template: template,
     };
 
@@ -46,8 +47,8 @@ export function onRequestFactory({
       (await rewriterContext.pageRequest) as CommonResponse,
     ) as CommonResponse;
 
-    if (afterwards.length) {
-      return runAfterWards(cfContext, transform, afterwards);
+    if (postware.length) {
+      return runPostwares(cfContext, transform, postware);
     }
 
     return transform;

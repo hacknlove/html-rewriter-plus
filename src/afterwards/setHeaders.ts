@@ -1,6 +1,6 @@
-import { AfterwardFunction } from "types";
+import { PostwareFunction } from "types";
 
-export function setHeaders(key: string, value: string): AfterwardFunction {
+export function setHeaders(key: string, value: string): PostwareFunction {
   return async (_, response: Response) => {
     response.headers.set(key, value);
     return response;
