@@ -1,7 +1,7 @@
 import { HTMLRewriter } from "@/test/HTMLRewriter";
 import { RewriterContext } from "types";
 import { describe, it, expect } from "vitest";
-import { ssrMap } from "./ssr-map";
+import { ssrMap } from "./ssrMap";
 
 describe("ssrMap", () => {
   it("should map data to attributes and innerHTML", async () => {

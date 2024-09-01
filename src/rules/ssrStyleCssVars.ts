@@ -26,7 +26,7 @@ async function ssrStyleMapHeader(
   return element + "}</style>";
 }
 
-export function ssrStyleDataSsrCssVars(
+export function ssrStyleCssVars(
   rewriter: HTMLRewriter,
   rewriterContext: RewriterContext,
 ) {

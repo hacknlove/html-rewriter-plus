@@ -1,9 +1,9 @@
 import { HTMLRewriter } from "@/test/HTMLRewriter";
 import { RewriterContext } from "types";
 import { describe, it, expect } from "vitest";
-import { ssrStyleDataSsrCssVars } from "./ssr-style-data-ssr-css-vars";
+import { ssrStyleCssVars } from "./ssrStyleCssVars";
 
-describe("ssrStyleDataSsrCssVars", () => {
+describe("ssrStyleCssVars", () => {
   it("should move the style element to the head", async () => {
     const rewriter = new HTMLRewriter();
     const rewriterContext: RewriterContext = {
@@ -15,7 +15,7 @@ describe("ssrStyleDataSsrCssVars", () => {
       },
     };
 
-    ssrStyleDataSsrCssVars(rewriter, rewriterContext);
+    ssrStyleCssVars(rewriter, rewriterContext);
 
     const result = await rewriter.transform(
       '<head><ssr-style data-ssr-css-vars="color.primary:primary"></ssr-style></head>',
@@ -39,7 +39,7 @@ describe("ssrStyleDataSsrCssVars", () => {
       },
     };
 
-    ssrStyleDataSsrCssVars(rewriter, rewriterContext);
+    ssrStyleCssVars(rewriter, rewriterContext);
 
     const result = await rewriter.transform(
       '<ssr-style data-ssr-css-vars="color.primary:primary"></ssr-style>',
