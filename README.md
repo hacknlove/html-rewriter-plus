@@ -2,6 +2,18 @@
 
 Static generated sites with dynamic content.
 
+## Disclaimer
+
+I have been used this technique in side-projects, for a while.
+
+Currently I am stabilizing it, paying extra attention to developer experience, and performance.
+
+It's not ready to be used, because breaking changes are expected.
+
+Every help is welcome.
+
+Thanks.
+
 ## How it works
 
 Use any static site generator to generate your site.
