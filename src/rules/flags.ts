@@ -6,10 +6,10 @@ export function ssrFlags(
   rewriterContext: RewriterContext,
 ) {
   rewriter.on("body", {
-    element(element: any) {
+    async element(element: any) {
       let bodyClass = element.getAttribute("class") ?? "";
       for (const key in rewriterContext.flags) {
-        if (rewriterContext.flags[key]) {
+        if (await rewriterContext.flags[key]) {
           bodyClass += " " + key;
         }
       }
