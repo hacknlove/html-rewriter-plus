@@ -3,9 +3,9 @@ import { resolve } from "../resolve";
 import { RewriterContext } from "types";
 
 async function ssrStyleMapHeader(
-  rewriterContext: any,
-  vars: any,
-  attributes: any,
+  rewriterContext: RewriterContext,
+  vars: string,
+  attributes: Record<string, string>,
 ) {
   let element = "<style ";
   for (const key in attributes) {
@@ -34,6 +34,8 @@ export function ssrStyleDataSsrCssVars(
     async element(element) {
       const vars = element.getAttribute("data-ssr-css-vars") as string;
 
+      element.removeAttribute("data-ssr-css-vars");
+
       if (rewriterContext.headElements) {
         rewriterContext.headElements.push(
           ssrStyleMapHeader(
@@ -60,7 +62,7 @@ export function ssrStyleDataSsrCssVars(
           );
           continue;
         }
-        style += `--${attribute}: ${value};`;
+        style += `--${attribute}:${value};`;
       }
 
       element.after(`<style>:root{${style}}</style>`, { html: true });
