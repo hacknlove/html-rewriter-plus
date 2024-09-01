@@ -8,6 +8,10 @@ export async function resolve(data: any, path: string | null): Promise<any> {
 
   let value = await data[first];
 
+  if (value === undefined) {
+    return undefined;
+  }
+
   for (const segment of segments) {
     value = value[segment];
     if (value === undefined) {
