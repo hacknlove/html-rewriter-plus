@@ -1,5 +1,5 @@
 {
-  "name": "html-rewritter-plus",
+  "name": "html-rewriter-plus",
   "version": "0.0.2",
   "main": "dist/index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "build": "npm run build:commonjs; npm run build:esm",
     "prepublish": "npm run build",
     "test": "vitest",
-    "lint": "eslint .",
+    "lint": "eslint ./src --fix",
     "format": "prettier --write \"**/*.ts\""
   },
   "devDependencies": {
@@ -27,5 +27,11 @@
     "typescript-eslint": "^8.3.0",
     "vite-tsconfig-paths": "^5.0.1",
     "vitest": "^2.0.5"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/commonjs/index.js"
+    }
   }
 }

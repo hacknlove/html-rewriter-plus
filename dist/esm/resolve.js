@@ -8,6 +8,9 @@ async function resolve(data, path) {
     const segments = path.split(".");
     const first = segments.shift();
     let value = await data[first];
+    if (value === undefined) {
+        return undefined;
+    }
     for (const segment of segments) {
         value = value[segment];
         if (value === undefined) {

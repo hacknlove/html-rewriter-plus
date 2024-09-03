@@ -2,6 +2,12 @@
 
 Static generated sites with dynamic content.
 
+## Install
+
+```bash
+npm install html-rewriter-plus
+```
+
 ## Disclaimer
 
 I have been used this technique in side-projects, for a while.
