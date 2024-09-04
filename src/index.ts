@@ -23,6 +23,8 @@ export function onRequestFactory({
       return cfContext.next();
     }
 
+    const originalTemplate = template;
+
     const rewriterContext: RewriterContext = {
       pageRequest: template
         ? cfContext.env.ASSETS.fetch(new URL(template, cfContext.request.url))
@@ -34,16 +36,22 @@ export function onRequestFactory({
       template: template,
     };
 
+    const rewriter = rewriterFactory(rewriterContext);
+
+    for (const middleware of middlewares) {
+      await middleware(cfContext, rewriterContext);
+    }
+
     for (const [field, value] of Object.entries(rewriterContext.data)) {
       if (typeof value === "function") {
         rewriterContext.data[field] = value(cfContext, rewriterContext);
       }
     }
 
-    const rewriter = rewriterFactory(rewriterContext);
-
-    for (const middleware of middlewares) {
-      await middleware(cfContext, rewriterContext);
+    if (rewriterContext.template !== originalTemplate) {
+      rewriterContext.pageRequest = cfContext.env.ASSETS.fetch(
+        new URL(rewriterContext.template, cfContext.request.url),
+      );
     }
 
     if (!rewriterContext.pageRequest) {
