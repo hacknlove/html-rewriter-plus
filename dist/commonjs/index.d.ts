@@ -4,7 +4,7 @@ export { setHeaders } from "./postwares/setHeaders";
 export declare function onRequestFactory({ template, middlewares, data, clientSideData, postware, }: {
     template?: string | undefined;
     middlewares?: MiddlewareFunction[] | undefined;
-    data?: {} | undefined;
+    data?: Record<string, any> | undefined;
     clientSideData?: {} | undefined;
     postware?: PostwareFunction[] | undefined;
 }): (cfContext: EventContext<any, any, any>) => Promise<import("@cloudflare/workers-types").Response | Response>;

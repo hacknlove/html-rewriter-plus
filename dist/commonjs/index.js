@@ -25,12 +25,17 @@ function onRequestFactory({ template = "", middlewares = [], data = {}, clientSi
             pageRequest: template
                 ? cfContext.env.ASSETS.fetch(new URL(template, cfContext.request.url))
                 : null,
-            data,
+            data: Object.assign({}, data),
             flags: {},
             clientSideData,
             postware: postware,
             template: template,
         };
+        for (const [field, value] of Object.entries(rewriterContext.data)) {
+            if (typeof value === "function") {
+                rewriterContext.data[field] = value(cfContext, rewriterContext);
+            }
+        }
         const rewriter = (0, rewriter_1.rewriterFactory)(rewriterContext);
         for (const middleware of middlewares) {
             yield middleware(cfContext, rewriterContext);

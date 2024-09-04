@@ -14,7 +14,7 @@ export { setHeaders } from "./postwares/setHeaders";
 export function onRequestFactory({
   template = "",
   middlewares = [] as Array<MiddlewareFunction>,
-  data = {},
+  data = {} as Record<string, any>,
   clientSideData = {},
   postware = [] as Array<PostwareFunction>,
 }) {
@@ -27,12 +27,18 @@ export function onRequestFactory({
       pageRequest: template
         ? cfContext.env.ASSETS.fetch(new URL(template, cfContext.request.url))
         : null,
-      data,
+      data: { ...data },
       flags: {},
       clientSideData,
       postware: postware,
       template: template,
     };
+
+    for (const [field, value] of Object.entries(rewriterContext.data)) {
+      if (typeof value === "function") {
+        rewriterContext.data[field] = value(cfContext, rewriterContext);
+      }
+    }
 
     const rewriter = rewriterFactory(rewriterContext);
 
