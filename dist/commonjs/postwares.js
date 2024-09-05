@@ -10,12 +10,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.runPostwares = runPostwares;
-function runPostwares(context, inputResponse, postwares) {
+function runPostwares(cfContext, rewriterContext, inputResponse, postwares) {
     return __awaiter(this, void 0, void 0, function* () {
         let outputResponse = new Response(inputResponse.body, inputResponse);
         for (const postwareFunction of postwares) {
             outputResponse =
-                (yield postwareFunction(context, outputResponse)) || outputResponse;
+                (yield postwareFunction(cfContext, rewriterContext, outputResponse)) ||
+                    outputResponse;
         }
         return outputResponse;
     });

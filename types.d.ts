@@ -4,14 +4,15 @@ import {
 } from "@cloudflare/workers-types";
 
 export type PostwareFunction = (
-  context: EventContext<any, any, any>,
+  cfContext: EventContext<any, any, any>,
+  rewriterContext: RewriterContext,
   response: Response,
 ) => Promise<Response | void>;
 
 export type MiddlewareFunction = (
   cfContext: EventContext<any, any, any>,
   rewriterContext: RewriterContext,
-) => Promise<void>;
+) => Promise<void | Response>;
 
 export type RewriterContext = {
   headElements?: Array<Promise<string>> | null;
@@ -21,6 +22,16 @@ export type RewriterContext = {
   clientSideData: Record<string, any>;
   postware: Array<PostwareFunction>;
   template: string;
+};
+
+export type Rule = (
+  rewriter: HTMLRewriter,
+  rewriterContext: RewriterContext,
+) => void;
+
+export type RewriterFactoryParameters = {
+  rewriterContext: RewriterContext;
+  extraRules?: Array<Rule>;
 };
 
 export type CommonResponse = CFResponse & Response;
