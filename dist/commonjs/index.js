@@ -14,9 +14,10 @@ exports.onRequestFactory = onRequestFactory;
 const postwares_1 = require("./postwares");
 const isWebsocket_1 = require("./isWebsocket");
 const rewriter_1 = require("./rewriter");
+const rules_1 = require("./rules");
 var setHeaders_1 = require("./postwares/setHeaders");
 Object.defineProperty(exports, "setHeaders", { enumerable: true, get: function () { return setHeaders_1.setHeaders; } });
-function onRequestFactory({ template = "", middlewares = [], data = {}, flags = {}, clientSideData = {}, postware = [], }) {
+function onRequestFactory({ template = "", middlewares = [], data = {}, flags = {}, clientSideData = {}, postware = [], rules = [], templates = {}, }) {
     return (cfContext) => __awaiter(this, void 0, void 0, function* () {
         if ((0, isWebsocket_1.isWebsocket)(cfContext)) {
             return cfContext.next();
@@ -31,8 +32,10 @@ function onRequestFactory({ template = "", middlewares = [], data = {}, flags = 
             clientSideData: Object.assign({}, clientSideData),
             postware: postware,
             template: template,
+            rules: [...rules],
+            templates: Object.assign({}, templates),
         };
-        const rewriter = (0, rewriter_1.rewriterFactory)(rewriterContext);
+        const rewriter = (0, rewriter_1.rewriterFactory)(rewriterContext, rules_1.fullRules);
         for (const middleware of middlewares) {
             const response = yield middleware(cfContext, rewriterContext);
             if (response) {

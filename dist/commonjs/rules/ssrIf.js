@@ -17,7 +17,7 @@ function ssrIf(rewriter, rewriterContext) {
             return __awaiter(this, void 0, void 0, function* () {
                 const field = element.getAttribute("data-ssr-if");
                 element.removeAttribute("data-ssr-if");
-                const value = yield (0, resolve_1.resolve)(rewriterContext, field);
+                const value = yield (0, resolve_1.resolve)(rewriterContext.data, field);
                 if (!value) {
                     element.remove();
                 }

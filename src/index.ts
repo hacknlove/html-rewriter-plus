@@ -4,10 +4,12 @@ import {
   MiddlewareFunction,
   RewriterContext,
   CommonResponse,
+  Rule,
 } from "types";
 import { runPostwares } from "./postwares";
 import { isWebsocket } from "./isWebsocket";
 import { rewriterFactory } from "./rewriter";
+import { fullRules } from "./rules";
 
 export { setHeaders } from "./postwares/setHeaders";
 
@@ -18,6 +20,8 @@ export function onRequestFactory({
   flags = {} as Record<string, any>,
   clientSideData = {},
   postware = [] as Array<PostwareFunction>,
+  rules = [] as Array<Rule>,
+  templates = {} as Record<string, string>,
 }) {
   return async (cfContext: EventContext<any, any, any>) => {
     if (isWebsocket(cfContext)) {
@@ -35,9 +39,11 @@ export function onRequestFactory({
       clientSideData: { ...clientSideData },
       postware: postware,
       template: template,
+      rules: [...rules],
+      templates: { ...templates },
     };
 
-    const rewriter = rewriterFactory(rewriterContext);
+    const rewriter = rewriterFactory(rewriterContext, fullRules);
 
     for (const middleware of middlewares) {
       const response = await middleware(cfContext, rewriterContext);

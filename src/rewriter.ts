@@ -1,10 +1,8 @@
 import { RewriterContext, Rule } from "types";
 
-import { rules } from "./rules";
-
 export function rewriterFactory(
   rewriterContext: RewriterContext,
-  extraRules: Array<Rule> = [],
+  rules: Array<Rule>,
 ) {
   // @ts-expect-error: HTMLRewriter is available only in the Cloudflare environment
   const rewriter = new HTMLRewriter();
@@ -13,7 +11,7 @@ export function rewriterFactory(
     rule(rewriter, rewriterContext);
   }
 
-  for (const rule of extraRules) {
+  for (const rule of rewriterContext.rules) {
     rule(rewriter, rewriterContext);
   }
 

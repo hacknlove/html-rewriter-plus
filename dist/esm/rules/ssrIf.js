@@ -7,7 +7,7 @@ function ssrIf(rewriter, rewriterContext) {
         async element(element) {
             const field = element.getAttribute("data-ssr-if");
             element.removeAttribute("data-ssr-if");
-            const value = await (0, resolve_1.resolve)(rewriterContext, field);
+            const value = await (0, resolve_1.resolve)(rewriterContext.data, field);
             if (!value) {
                 element.remove();
             }

@@ -22,6 +22,8 @@ export type RewriterContext = {
   clientSideData: Record<string, any>;
   postware: Array<PostwareFunction>;
   template: string;
+  templates: Record<string, string>;
+  rules: Array<Rule>;
 };
 
 export type Rule = (
