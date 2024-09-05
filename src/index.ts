@@ -15,6 +15,7 @@ export function onRequestFactory({
   template = "",
   middlewares = [] as Array<MiddlewareFunction>,
   data = {} as Record<string, any>,
+  flags = {} as Record<string, any>,
   clientSideData = {},
   postware = [] as Array<PostwareFunction>,
 }) {
@@ -30,8 +31,8 @@ export function onRequestFactory({
         ? cfContext.env.ASSETS.fetch(new URL(template, cfContext.request.url))
         : null,
       data: { ...data },
-      flags: {},
-      clientSideData,
+      flags: { ...flags },
+      clientSideData: { ...clientSideData },
       postware: postware,
       template: template,
     };
@@ -39,12 +40,32 @@ export function onRequestFactory({
     const rewriter = rewriterFactory(rewriterContext);
 
     for (const middleware of middlewares) {
-      await middleware(cfContext, rewriterContext);
+      const response = await middleware(cfContext, rewriterContext);
+      if (response) {
+        return response;
+      }
     }
 
     for (const [field, value] of Object.entries(rewriterContext.data)) {
       if (typeof value === "function") {
         rewriterContext.data[field] = value(cfContext, rewriterContext);
+      }
+    }
+
+    for (const [field, value] of Object.entries(rewriterContext.flags)) {
+      if (typeof value === "function") {
+        rewriterContext.flags[field] = value(cfContext, rewriterContext);
+      }
+    }
+
+    for (const [field, value] of Object.entries(
+      rewriterContext.clientSideData,
+    )) {
+      if (typeof value === "function") {
+        rewriterContext.clientSideData[field] = value(
+          cfContext,
+          rewriterContext,
+        );
       }
     }
 
@@ -65,7 +86,7 @@ export function onRequestFactory({
     ) as CommonResponse;
 
     if (postware.length) {
-      return runPostwares(cfContext, transform, postware);
+      return runPostwares(cfContext, rewriterContext, transform, postware);
     }
 
     return transform;

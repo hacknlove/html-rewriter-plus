@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.setHeaders = setHeaders;
 function setHeaders(key, value) {
-    return (_, response) => __awaiter(this, void 0, void 0, function* () {
+    return (_, __, response) => __awaiter(this, void 0, void 0, function* () {
         response.headers.set(key, value);
         return response;
     });

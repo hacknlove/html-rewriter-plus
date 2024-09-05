@@ -20,6 +20,9 @@ function ssrEnd(rewriter, rewriterContext) {
                 catch (error) {
                     console.error(error);
                 }
+                for (const [field, value] of Object.entries(rewriterContext.clientSideData)) {
+                    rewriterContext.clientSideData[field] = yield value;
+                }
                 const code = "<script>window.data=" +
                     JSON.stringify(rewriterContext.clientSideData) +
                     ";document.dispatchEvent(new Event('on-data-loaded'))</script>";
