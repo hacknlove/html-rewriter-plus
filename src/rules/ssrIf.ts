@@ -11,7 +11,7 @@ export function ssrIf(
       const field = element.getAttribute("data-ssr-if");
       element.removeAttribute("data-ssr-if");
 
-      const value = await resolve(rewriterContext, field);
+      const value = await resolve(rewriterContext.data, field);
 
       if (!value) {
         element.remove();

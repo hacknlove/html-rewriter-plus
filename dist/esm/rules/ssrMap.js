@@ -38,6 +38,7 @@ function ssrMap(rewriter, rewriterContext) {
                 element.remove();
                 return;
             }
+            let style = element.getAttribute("style") || "";
             for (const [, field, attribute] of map.matchAll(/([.\w]+):([^,]+)/g)) {
                 const value = await (0, resolve_1.resolve)(rewriterContext.data, field);
                 if (value === undefined) {
@@ -52,8 +53,16 @@ function ssrMap(rewriter, rewriterContext) {
                         element.setInnerContent(value);
                         break;
                     default:
-                        element.setAttribute(attribute, value);
+                        if (attribute.startsWith("style.")) {
+                            style += attribute.substring(6) + ":" + value + ";";
+                        }
+                        else {
+                            element.setAttribute(attribute, value);
+                        }
                 }
+            }
+            if (style) {
+                element.setAttribute("style", style);
             }
         },
     });
