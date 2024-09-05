@@ -23,6 +23,9 @@ function ssrForEach(rewriter, rewriterContext) {
                 const template = element.getAttribute("data-ssr-render");
                 const items = yield (0, resolve_1.resolve)(rewriterContext.data, field);
                 for (const item of items) {
+                    if (!item) {
+                        continue;
+                    }
                     const newRewriterContext = Object.assign(Object.assign({}, rewriterContext), { data: Object.assign(Object.assign({}, rewriterContext.data), { [key]: item }) });
                     const rewriter = (0, rewriter_1.rewriterFactory)(newRewriterContext, _1.smallRules);
                     const templateHtml = rewriterContext.templates[(_a = item.template) !== null && _a !== void 0 ? _a : template];
