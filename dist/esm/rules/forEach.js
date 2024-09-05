@@ -12,6 +12,9 @@ function ssrForEach(rewriter, rewriterContext) {
             const template = element.getAttribute("data-ssr-render");
             const items = await (0, resolve_1.resolve)(rewriterContext.data, field);
             for (const item of items) {
+                if (!item) {
+                    continue;
+                }
                 const newRewriterContext = {
                     ...rewriterContext,
                     data: { ...rewriterContext.data, [key]: item },

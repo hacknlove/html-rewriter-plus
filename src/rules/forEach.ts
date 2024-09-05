@@ -17,6 +17,9 @@ export function ssrForEach(
       const items = await resolve(rewriterContext.data, field);
 
       for (const item of items) {
+        if (!item) {
+          continue;
+        }
         const newRewriterContext = {
           ...rewriterContext,
           data: { ...rewriterContext.data, [key]: item },
