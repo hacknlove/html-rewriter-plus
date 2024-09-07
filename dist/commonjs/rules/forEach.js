@@ -14,13 +14,16 @@ const rewriter_1 = require("@/rewriter");
 const resolve_1 = require("@/resolve");
 const _1 = require(".");
 function ssrForEach(rewriter, rewriterContext) {
-    rewriter.on("template[data-ssr-for-each]", {
+    rewriter.on("template[data-ssr-for]", {
         element(element) {
             return __awaiter(this, void 0, void 0, function* () {
                 var _a;
+                if (rewriterContext.skip) {
+                    return;
+                }
                 const key = element.getAttribute("data-ssr-for");
                 const field = element.getAttribute("data-ssr-in");
-                const template = element.getAttribute("data-ssr-render");
+                const template = element.getAttribute("data-ssr-render-template");
                 const items = yield (0, resolve_1.resolve)(rewriterContext.data, field);
                 for (const item of items) {
                     if (!item) {

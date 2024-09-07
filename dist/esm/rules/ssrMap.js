@@ -31,6 +31,9 @@ async function ssrMapHeader(rewriterContext, type, map, attributes) {
 function ssrMap(rewriter, rewriterContext) {
     rewriter.on("[data-ssr-map]", {
         async element(element) {
+            if (rewriterContext.skip) {
+                return;
+            }
             const map = element.getAttribute("data-ssr-map");
             element.removeAttribute("data-ssr-map");
             if (rewriterContext.headElements) {

@@ -21,6 +21,9 @@ async function ssrStyleMapHeader(rewriterContext, vars, attributes) {
 function ssrStyleCssVars(rewriter, rewriterContext) {
     rewriter.on("ssr-style[data-ssr-css-vars]", {
         async element(element) {
+            if (rewriterContext.skip) {
+                return;
+            }
             const vars = element.getAttribute("data-ssr-css-vars");
             element.removeAttribute("data-ssr-css-vars");
             if (rewriterContext.headElements) {
