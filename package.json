@@ -33,5 +33,10 @@
       "import": "./dist/esm/index.js",
       "require": "./dist/commonjs/index.js"
     }
-  }
+  },
+  "files": [
+    "dist",
+    "LICENSE.md",
+    "README.md"
+  ]
 }
