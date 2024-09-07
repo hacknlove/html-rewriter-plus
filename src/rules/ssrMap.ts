@@ -43,6 +43,9 @@ export function ssrMap(
 ) {
   rewriter.on("[data-ssr-map]", {
     async element(element) {
+      if (rewriterContext.skip) {
+        return;
+      }
       const map = element.getAttribute("data-ssr-map") as string;
       element.removeAttribute("data-ssr-map");
 

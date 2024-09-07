@@ -8,6 +8,9 @@ export function ssrIf(
 ) {
   rewriter.on("[data-ssr-if]", {
     async element(element: any) {
+      if (rewriterContext.skip) {
+        return;
+      }
       const field = element.getAttribute("data-ssr-if");
       element.removeAttribute("data-ssr-if");
 

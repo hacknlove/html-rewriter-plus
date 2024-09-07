@@ -8,11 +8,16 @@ export function ssrForEach(
   rewriter: HTMLRewriter,
   rewriterContext: RewriterContext,
 ) {
-  rewriter.on("template[data-ssr-for-each]", {
+  rewriter.on("template[data-ssr-for]", {
     async element(element) {
+      if (rewriterContext.skip) {
+        return;
+      }
       const key = element.getAttribute("data-ssr-for") as string;
       const field = element.getAttribute("data-ssr-in") as string;
-      const template = element.getAttribute("data-ssr-render") as string;
+      const template = element.getAttribute(
+        "data-ssr-render-template",
+      ) as string;
 
       const items = await resolve(rewriterContext.data, field);
 

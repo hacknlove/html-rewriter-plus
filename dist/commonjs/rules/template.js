@@ -21,30 +21,34 @@ const autoClose = [
 ];
 function ssrTemplate(rewriter, rewriterContext) {
     let html = "";
-    rewriter.on("template[data-ssr-template]", {
+    rewriter.on("template[data-ssr-name]", {
         element(element) {
-            const templateName = element.getAttribute("data-ssr-template");
+            const templateName = element.getAttribute("data-ssr-name");
+            rewriterContext.skip = true;
             html = "";
             element.onEndTag(() => {
                 var _a;
+                rewriterContext.skip = false;
                 (_a = rewriterContext.templates) !== null && _a !== void 0 ? _a : (rewriterContext.templates = {});
                 rewriterContext.templates[templateName] = html;
             });
+            element.remove();
         },
     });
-    rewriter.on("template[data-ssr-template] *", {
+    rewriter.on("template[data-ssr-name] *", {
         element(element) {
-            html += `<${element.tagName}`;
+            const tagName = element.tagName;
+            html += `<${tagName}`;
             for (const [name, value] of element.attributes) {
                 html += ` ${name}="${value}"`;
             }
-            if (autoClose.includes(element.tagName)) {
+            if (autoClose.includes(tagName)) {
                 html += "/>";
             }
             else {
                 html += ">";
                 element.onEndTag(() => {
-                    html += `</${element.tagName}>`;
+                    html += `</${tagName}>`;
                 });
             }
         },

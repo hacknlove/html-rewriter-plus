@@ -25,30 +25,35 @@ export function ssrTemplate(
   rewriterContext: RewriterContext,
 ) {
   let html: string = "";
-  rewriter.on("template[data-ssr-template]", {
+  rewriter.on("template[data-ssr-name]", {
     element(element) {
-      const templateName = element.getAttribute("data-ssr-template") as string;
+      const templateName = element.getAttribute("data-ssr-name") as string;
+      rewriterContext.skip = true;
       html = "";
 
       element.onEndTag(() => {
+        rewriterContext.skip = false;
         rewriterContext.templates ??= {};
         rewriterContext.templates[templateName] = html;
       });
+
+      element.remove();
     },
   });
 
-  rewriter.on("template[data-ssr-template] *", {
+  rewriter.on("template[data-ssr-name] *", {
     element(element) {
-      html += `<${element.tagName}`;
+      const tagName = element.tagName;
+      html += `<${tagName}`;
       for (const [name, value] of element.attributes) {
         html += ` ${name}="${value}"`;
       }
-      if (autoClose.includes(element.tagName)) {
+      if (autoClose.includes(tagName)) {
         html += "/>";
       } else {
         html += ">";
         element.onEndTag(() => {
-          html += `</${element.tagName}>`;
+          html += `</${tagName}>`;
         });
       }
     },

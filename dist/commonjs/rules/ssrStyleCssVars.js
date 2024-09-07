@@ -33,6 +33,9 @@ function ssrStyleCssVars(rewriter, rewriterContext) {
     rewriter.on("ssr-style[data-ssr-css-vars]", {
         element(element) {
             return __awaiter(this, void 0, void 0, function* () {
+                if (rewriterContext.skip) {
+                    return;
+                }
                 const vars = element.getAttribute("data-ssr-css-vars");
                 element.removeAttribute("data-ssr-css-vars");
                 if (rewriterContext.headElements) {

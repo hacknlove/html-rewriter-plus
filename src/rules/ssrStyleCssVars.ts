@@ -32,6 +32,9 @@ export function ssrStyleCssVars(
 ) {
   rewriter.on("ssr-style[data-ssr-css-vars]", {
     async element(element) {
+      if (rewriterContext.skip) {
+        return;
+      }
       const vars = element.getAttribute("data-ssr-css-vars") as string;
 
       element.removeAttribute("data-ssr-css-vars");

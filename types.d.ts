@@ -24,6 +24,7 @@ export type RewriterContext = {
   template: string;
   templates: Record<string, string>;
   rules: Array<Rule>;
+  skip?: boolean;
 };
 
 export type Rule = (
