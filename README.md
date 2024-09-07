@@ -18,7 +18,7 @@ Add some `data-ssr-*` attributes to your HTML elements.
 
 Use cloudflare page functions to fetch the data asynchronously, and render the HTML, injecting the data into the elements on the fly.
 
-## Template directives
+## Directives
 
 Use any static site generator to generate your site.
 
@@ -69,6 +69,50 @@ Any logical operation should be done in the function, not in the template.
 
 **Note:** The css variables be set to the root element of the document.
 
+### Define template 
+**Element:** `template`
+**Attribute:** `data-ssr-name`
+**Value:** The name of the template
+
+It defines the templated named `name` so it can be used by other directives.
+
+currently, only the `for each` directive uses templates
+
+```html
+<!-- public/some-template.html-->
+<template data-ssr-name="bookCard">
+  <div class="catd">
+    <h2 data-ssr-map="book.title:innetText" />
+    <h3 data-ssr-map="book.author:innerHtml" />
+    <img data-ssr-map="book.cover:src">
+    <div class="description" data-ssr-map="book.description:imnerHTML" />
+  </div>
+</div>
+```
+
+**Note:** Templates must be set before they are used
+
+**Note:** Templates can be set using the API
+
+### For Each
+**Element:** `template`
+**Attribute:** `data-ssr-for`
+**Value:** The name of the field to be used to hold the array elements
+**Attribute:** `data-ssr-in`
+**Value:** The name of the field where the array lies
+**Attribute:** `data-ssr-reder-template`
+**Value:** The name of the template to render
+
+It renders the said template for each item of the array, storing it with the specified name
+
+```html
+<!-- public/some-template.html -->
+<template data-ssr-for="book" data-ssr-in="books" data-ssr-render-template="bookCard" />
+```
+
+
+
+
 ## Cloudflare Pages functions
 
 Follow the cloudflare pages functions documentation to deal with routes.
@@ -96,9 +140,14 @@ export const onRequestGet = onRequestFactory({
 * `postwares`: an array of functions that will be called in order after the data functions are called, and the response starts to be created.
 * `clientSideData`: an object with data that will be available in the client-side, at `window.data`.
 * `rules`: an array of extra rules that will be used to rewrite the response.
+* `templates`: an object of templates, as strings, promises, or functions
 
 ### template
-It's the route to the template file, within the static generated site.
+It's the template or the route to the template file, within the static generated site, that will be used to render the page.
+It can be also a promise of the template, or a function that returns the template as a string or as a promise.
+
+if the (resolved) string starts by `/` it will be considered a path to ger the template, otherwise it will be considered as the template itself.
+
 
 ### data
 It's the data object that will be used to render the template.
@@ -367,3 +416,6 @@ export const onRequestGet = onRequestFactory({
   ],
 });
 ```
+
+### Templates
+it's an object whose keys are the names of the templates and whose values are the templates that can be used by other directives to render data
