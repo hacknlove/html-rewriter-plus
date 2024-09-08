@@ -1,9 +1,7 @@
-import { EventContext } from "@cloudflare/workers-types";
 import { PostwareFunction, CommonResponse, RewriterContext } from "types";
 
 export async function runPostwares(
-  cfContext: EventContext<any, any, any>,
-  rewriterContext: RewriterContext,
+  ctx: RewriterContext,
   inputResponse: CommonResponse,
   postwares: Array<PostwareFunction>,
 ) {
@@ -11,8 +9,7 @@ export async function runPostwares(
 
   for (const postwareFunction of postwares) {
     outputResponse =
-      (await postwareFunction(cfContext, rewriterContext, outputResponse)) ||
-      outputResponse;
+      (await postwareFunction(ctx, outputResponse)) || outputResponse;
   }
   return outputResponse;
 }

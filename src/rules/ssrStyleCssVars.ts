@@ -3,7 +3,7 @@ import { resolve } from "../resolve";
 import { RewriterContext } from "types";
 
 async function ssrStyleMapHeader(
-  rewriterContext: RewriterContext,
+  ctx: RewriterContext,
   vars: string,
   attributes: Record<string, string>,
 ) {
@@ -15,7 +15,7 @@ async function ssrStyleMapHeader(
   element += ">:root{";
 
   for (const [, field, key] of vars.matchAll(/([.\w]+):([^,]+)/g)) {
-    const value = await resolve(rewriterContext.data, field);
+    const value = await resolve(ctx.data, field);
     if (value === undefined) {
       attributes["data-ssr-error"] = `field ${field} not found in data`;
       continue;
@@ -26,26 +26,19 @@ async function ssrStyleMapHeader(
   return element + "}</style>";
 }
 
-export function ssrStyleCssVars(
-  rewriter: HTMLRewriter,
-  rewriterContext: RewriterContext,
-) {
+export function ssrStyleCssVars(rewriter: HTMLRewriter, ctx: RewriterContext) {
   rewriter.on("ssr-style[data-ssr-css-vars]", {
     async element(element) {
-      if (rewriterContext.skip) {
+      if (ctx.skip) {
         return;
       }
       const vars = element.getAttribute("data-ssr-css-vars") as string;
 
       element.removeAttribute("data-ssr-css-vars");
 
-      if (rewriterContext.headElements) {
-        rewriterContext.headElements.push(
-          ssrStyleMapHeader(
-            rewriterContext,
-            vars,
-            Object.fromEntries(element.attributes),
-          ),
+      if (ctx.headElements) {
+        ctx.headElements.push(
+          ssrStyleMapHeader(ctx, vars, Object.fromEntries(element.attributes)),
         );
 
         element.remove();
@@ -57,7 +50,7 @@ export function ssrStyleCssVars(
       let style = "";
 
       for (const [, field, attribute] of vars.matchAll(/([.\w]+):([^,]+)/g)) {
-        const value = await resolve(rewriterContext.data, field);
+        const value = await resolve(ctx.data, field);
         if (value === undefined) {
           element.setAttribute(
             "data-ssr-error",

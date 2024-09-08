@@ -4,13 +4,10 @@ import { HTMLRewriter } from "@cloudflare/workers-types";
 import { resolve } from "@/resolve";
 import { smallRules } from ".";
 
-export function ssrForEach(
-  rewriter: HTMLRewriter,
-  rewriterContext: RewriterContext,
-) {
+export function ssrForEach(rewriter: HTMLRewriter, ctx: RewriterContext) {
   rewriter.on("template[data-ssr-for]", {
     async element(element) {
-      if (rewriterContext.skip) {
+      if (ctx.skip) {
         return;
       }
       const key = element.getAttribute("data-ssr-for") as string;
@@ -19,21 +16,20 @@ export function ssrForEach(
         "data-ssr-render-template",
       ) as string;
 
-      const items = await resolve(rewriterContext.data, field);
+      const items = await resolve(ctx.data, field);
 
       for (const item of items) {
         if (!item) {
           continue;
         }
         const newRewriterContext = {
-          ...rewriterContext,
-          data: { ...rewriterContext.data, [key]: item },
+          ...ctx,
+          data: { ...ctx.data, [key]: item },
         } as RewriterContext;
 
         const rewriter = rewriterFactory(newRewriterContext, smallRules);
 
-        const templateHtml =
-          rewriterContext.templates[item.template ?? template];
+        const templateHtml = ctx.templates[item.template ?? template];
 
         const response = new Response(templateHtml);
 

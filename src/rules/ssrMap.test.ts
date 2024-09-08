@@ -6,14 +6,14 @@ import { ssrMap } from "./ssrMap";
 describe("ssrMap", () => {
   it("should map data to attributes and innerHTML", async () => {
     const rewriter = new HTMLRewriter();
-    const rewriterContext: RewriterContext = {
+    const ctx: RewriterContext = {
       data: {
         title: "Page Title",
         description: "Page Description",
       },
     };
 
-    ssrMap(rewriter, rewriterContext);
+    ssrMap(rewriter, ctx);
 
     const result = await rewriter.transform(
       '<head><title data-ssr-map="title:innerText"></title><meta key="description" data-ssr-map="description:content"></head>',
@@ -26,11 +26,11 @@ describe("ssrMap", () => {
 
   it("should add a data-ssr-error attribute if a field is not found", async () => {
     const rewriter = new HTMLRewriter();
-    const rewriterContext: RewriterContext = {
+    const ctx: RewriterContext = {
       data: {},
     };
 
-    ssrMap(rewriter, rewriterContext);
+    ssrMap(rewriter, ctx);
 
     const result = await rewriter.transform(
       '<head><title data-ssr-map="title:innerText"></title></head>',

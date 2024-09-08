@@ -2,19 +2,16 @@ import { resolve } from "../resolve";
 import { HTMLRewriter } from "@cloudflare/workers-types";
 import { RewriterContext } from "types";
 
-export function ssrIf(
-  rewriter: HTMLRewriter,
-  rewriterContext: RewriterContext,
-) {
+export function ssrIf(rewriter: HTMLRewriter, ctx: RewriterContext) {
   rewriter.on("[data-ssr-if]", {
     async element(element: any) {
-      if (rewriterContext.skip) {
+      if (ctx.skip) {
         return;
       }
       const field = element.getAttribute("data-ssr-if");
       element.removeAttribute("data-ssr-if");
 
-      const value = await resolve(rewriterContext.data, field);
+      const value = await resolve(ctx.data, field);
 
       if (!value) {
         element.remove();

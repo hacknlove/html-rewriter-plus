@@ -6,7 +6,7 @@ import { ssrStyleCssVars } from "./ssrStyleCssVars";
 describe("ssrStyleCssVars", () => {
   it("should move the style element to the head", async () => {
     const rewriter = new HTMLRewriter();
-    const rewriterContext: RewriterContext = {
+    const ctx: RewriterContext = {
       headElements: [],
       data: {
         color: {
@@ -15,7 +15,7 @@ describe("ssrStyleCssVars", () => {
       },
     };
 
-    ssrStyleCssVars(rewriter, rewriterContext);
+    ssrStyleCssVars(rewriter, ctx);
 
     const result = await rewriter.transform(
       '<head><ssr-style data-ssr-css-vars="color.primary:primary"></ssr-style></head>',
@@ -23,7 +23,7 @@ describe("ssrStyleCssVars", () => {
 
     expect(result).toBe("<head></head>");
 
-    const awaitedHeadElements = await Promise.all(rewriterContext.headElements);
+    const awaitedHeadElements = await Promise.all(ctx.headElements);
     expect(awaitedHeadElements).toEqual([
       "<style >:root{--primary:red;}</style>",
     ]);
@@ -31,7 +31,7 @@ describe("ssrStyleCssVars", () => {
 
   it("should add the variable to the style element", async () => {
     const rewriter = new HTMLRewriter();
-    const rewriterContext: RewriterContext = {
+    const ctx: RewriterContext = {
       data: {
         color: {
           primary: "red",
@@ -39,7 +39,7 @@ describe("ssrStyleCssVars", () => {
       },
     };
 
-    ssrStyleCssVars(rewriter, rewriterContext);
+    ssrStyleCssVars(rewriter, ctx);
 
     const result = await rewriter.transform(
       '<ssr-style data-ssr-css-vars="color.primary:primary"></ssr-style>',

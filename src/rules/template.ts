@@ -20,24 +20,27 @@ const autoClose = [
   "wbr",
 ];
 
-export function ssrTemplate(
-  rewriter: HTMLRewriter,
-  rewriterContext: RewriterContext,
-) {
+export function ssrTemplate(rewriter: HTMLRewriter, ctx: RewriterContext) {
   let html: string = "";
   rewriter.on("template[data-ssr-name]", {
     element(element) {
       const templateName = element.getAttribute("data-ssr-name") as string;
-      rewriterContext.skip = true;
+      ctx.skip = true;
       html = "";
 
       element.onEndTag(() => {
-        rewriterContext.skip = false;
-        rewriterContext.templates ??= {};
-        rewriterContext.templates[templateName] = html;
+        ctx.skip = false;
+        ctx.templates ??= {};
+        ctx.templates[templateName] = html;
       });
 
       element.remove();
+    },
+    text(text) {
+      html += text.text;
+    },
+    comments(comment) {
+      html += `<!--${comment.text}-->`;
     },
   });
 
@@ -56,12 +59,6 @@ export function ssrTemplate(
           html += `</${tagName}>`;
         });
       }
-    },
-    text(text) {
-      html += text.text;
-    },
-    comments(comment) {
-      html += `<!--${comment.text}-->`;
     },
   });
 }

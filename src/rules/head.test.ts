@@ -6,16 +6,14 @@ import { ssrHead } from "./head";
 describe("ssrHead", () => {
   it("move some head elements to the end of the head", async () => {
     const rewriter = new HTMLRewriter();
-    const rewriterContext: RewriterContext = {};
+    const ctx: RewriterContext = {};
 
-    ssrHead(rewriter, rewriterContext);
+    ssrHead(rewriter, ctx);
 
     rewriter.on("meta[key='move-this']", {
       element(element) {
         // it's responsability of any rule using this feature to add the element to the headElements array. Here we will just hardcode the string, for the sake of this test.
-        rewriterContext.headElements.push(
-          '<meta key="move-this" content="foo"/>',
-        );
+        ctx.headElements.push('<meta key="move-this" content="foo"/>');
         element.remove();
       },
     });

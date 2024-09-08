@@ -5,94 +5,85 @@ import {
   RewriterContext,
   CommonResponse,
   Rule,
+  Template,
 } from "types";
 import { runPostwares } from "./postwares";
 import { isWebsocket } from "./isWebsocket";
 import { rewriterFactory } from "./rewriter";
 import { fullRules } from "./rules";
+import { getTemplate } from "./getTemplate";
 
 export { setHeaders } from "./postwares/setHeaders";
 
 export function onRequestFactory({
-  template = "",
+  template = undefined as Template,
   middlewares = [] as Array<MiddlewareFunction>,
   data = {} as Record<string, any>,
   flags = {} as Record<string, any>,
   clientSideData = {},
   postware = [] as Array<PostwareFunction>,
   rules = [] as Array<Rule>,
-  templates = {} as Record<string, string>,
+  templates = {} as Record<string, Template>,
+  any = {} as Record<string, any>,
 }) {
   return async (cfContext: EventContext<any, any, any>) => {
     if (isWebsocket(cfContext)) {
       return cfContext.next();
     }
 
-    const originalTemplate = template;
-
-    const rewriterContext: RewriterContext = {
-      pageRequest: template
-        ? cfContext.env.ASSETS.fetch(new URL(template, cfContext.request.url))
-        : null,
+    const ctx: RewriterContext = {
+      cfContext,
+      pageRequest: null,
       data: { ...data },
       flags: { ...flags },
       clientSideData: { ...clientSideData },
       postware: postware,
-      template: template,
       rules: [...rules],
       templates: { ...templates },
+      any: { ...any },
     };
 
-    const rewriter = rewriterFactory(rewriterContext, fullRules);
+    ctx.pageRequest = getTemplate(ctx, template);
+
+    const rewriter = rewriterFactory(ctx, fullRules);
 
     for (const middleware of middlewares) {
-      const response = await middleware(cfContext, rewriterContext);
+      const response = await middleware(ctx);
       if (response) {
         return response;
       }
     }
 
-    for (const [field, value] of Object.entries(rewriterContext.data)) {
+    for (const [field, value] of Object.entries(ctx.data)) {
       if (typeof value === "function") {
-        rewriterContext.data[field] = value(cfContext, rewriterContext);
+        ctx.data[field] = value(ctx);
       }
     }
 
-    for (const [field, value] of Object.entries(rewriterContext.flags)) {
+    for (const [field, value] of Object.entries(ctx.flags)) {
       if (typeof value === "function") {
-        rewriterContext.flags[field] = value(cfContext, rewriterContext);
+        ctx.flags[field] = value(ctx);
       }
     }
 
-    for (const [field, value] of Object.entries(
-      rewriterContext.clientSideData,
-    )) {
+    for (const [field, value] of Object.entries(ctx.templates)) {
       if (typeof value === "function") {
-        rewriterContext.clientSideData[field] = value(
-          cfContext,
-          rewriterContext,
-        );
+        ctx.templates[field] = getTemplate(ctx, value);
       }
     }
 
-    if (rewriterContext.template !== originalTemplate) {
-      rewriterContext.pageRequest = cfContext.env.ASSETS.fetch(
-        new URL(rewriterContext.template, cfContext.request.url),
-      );
-    }
-
-    if (!rewriterContext.pageRequest) {
-      rewriterContext.pageRequest = cfContext.env.ASSETS.fetch(
-        new URL("/404", cfContext.request.url),
-      );
+    for (const [field, value] of Object.entries(ctx.clientSideData)) {
+      if (typeof value === "function") {
+        ctx.clientSideData[field] = value(ctx);
+      }
     }
 
     const transform = rewriter.transform(
-      (await rewriterContext.pageRequest) as CommonResponse,
+      (await ctx.pageRequest) as CommonResponse,
     ) as CommonResponse;
 
     if (postware.length) {
-      return runPostwares(cfContext, rewriterContext, transform, postware);
+      return runPostwares(ctx, transform, postware);
     }
 
     return transform;

@@ -6,7 +6,7 @@ import { ssrFlags } from "./flags";
 describe("ssrFlags", () => {
   it("should add flags as classes to the body element", async () => {
     const rewriter = new HTMLRewriter();
-    const rewriterContext: RewriterContext = {
+    const ctx: RewriterContext = {
       flags: {
         flag1: true,
         flag2: false,
@@ -14,7 +14,7 @@ describe("ssrFlags", () => {
       },
     };
 
-    ssrFlags(rewriter, rewriterContext);
+    ssrFlags(rewriter, ctx);
 
     const result = await rewriter.transform(
       '<body class="existing-class"></body>',

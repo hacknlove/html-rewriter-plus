@@ -1,4 +1,3 @@
-import { EventContext } from "@cloudflare/workers-types";
 import { describe, expect, it } from "vitest";
 
 import { setHeaders } from "./setHeaders";
@@ -9,12 +8,11 @@ describe("setHeaders", () => {
     const value = "application/json";
 
     const response = new Response();
-    const cfContext = {} as EventContext<any, any, any>;
 
-    const rewriterContext = {} as any;
+    const ctx = {} as any;
 
     const postware = setHeaders(key, value);
-    await postware(cfContext, rewriterContext, response);
+    await postware(ctx, response);
 
     expect(response.headers.get(key)).toBe(value);
   });
