@@ -144,10 +144,15 @@ export const onRequestGet = onRequestFactory({
 
 ### template
 It's the template or the route to the template file, within the static generated site, that will be used to render the page.
-It can be also a promise of the template, or a function that returns the template as a string or as a promise.
+It can be also a promise of the template, or a function that returns the template as a string or as `Response`, (or as a promise that resolves to a string or a `Response`).
 
-if the (resolved) string starts by `/` it will be considered a path to ger the template, otherwise it will be considered as the template itself.
+If the string starts by `/` it will be considered a path to get the template.
 
+If the string starts by `//`, `http://`, or `https://`, it will be considered a URL to get the template.
+
+Otherwise, it will be considered the template itself.
+
+**Note:** If the template is falsy, the template will be the same as the path.
 
 ### data
 It's the data object that will be used to render the template.
@@ -174,9 +179,9 @@ export const onRequestGet = onRequestFactory({
   },
 });
 
-// rewriterContext is not used in this example, but it's available
-function getUser(cfContext, rewriteContext) {
-  const userId = cfContext.params.userId;
+// ctx is not used in this example, but it's available
+function getUser(ctx) {
+  const userId = ctx.cfContext.params.userId;
   return fetch(`https://jsonplaceholder.typicode.com/users/${userId}`).then(response => response.json());
 }
 ```
@@ -196,7 +201,7 @@ Return something different than the template.
 export const onRequestGet = onRequestFactory({
   template: "/some-template",
   middlewares: [
-    (cfContext, rewriteContext) => {
+    (ctx) => {
       if (!cfContext.request.headers.get('authorization')) {
         // Redirect to login page
         return new Response(null, {
@@ -219,11 +224,11 @@ Render a different template.
 export const onRequestGet = onRequestFactory({
   template: "/some-template",
   middlewares: [
-    (cfContext, rewriteContext) => {
-      if (!cfContext.request.headers.get('authorization')) {
-        rewriteContext.template = "/login-required";
-        rewriteContext.data = {
-          redirect: cfContext.request.url
+    (ctx) => {
+      if (!ctx.cfContext.request.headers.get('authorization')) {
+        ctx.template = "/login-required";
+        ctx.data = {
+          redirect: ctx.cfContext.request.url
         }
       }
     },
@@ -241,8 +246,8 @@ Set values in the context object, to be used by the data functions.
 export const onRequestGet = onRequestFactory({
   template: "/some-template",
   middlewares: [
-    (cfContext, rewriteContext) => {
-      rewriteContext.lang = cfContext.request.headers.get('accept-language');
+    (ctx) => {
+      ctx.lang = ctx.cfContext.request.headers.get('accept-language');
     },
   ],
   data: {
@@ -250,8 +255,8 @@ export const onRequestGet = onRequestFactory({
   },
 });
 
-function getPost(cfContext, rewriteContext) {
-  const lang = rewriteContext.lang;
+function getPost(ctx) {
+  const lang = ctx.lang;
   // fetch the post using the lang
 }
 ```
@@ -262,18 +267,18 @@ Another option is to use the data itself, but remember to place the required fie
 export const onRequestGet = onRequestFactory({
   template: "/some-template",
   middlewares: [
-    (cfContext, rewriteContext) => {
-      rewriteContext.lang = cfContext.request.headers.get('accept-language');
+    (ctx) => {
+      ctx.lang = ctx.cfContext.request.headers.get('accept-language');
     },
   ],
   data: {
-    lang: cfContext => cfContext.request.headers.get('accept-language'),
+    lang: ctx => ctx.cfContext.request.headers.get('accept-language'),
     post: getPost
   },
 });
 
-function getPost(cfContext, rewriteContext) {
-  const lang = rewriteContext.data.lang;
+function getPost(ctx) {
+  const lang = ctx.data.lang;
   // fetch the post using the lang
 }
 ```
@@ -315,7 +320,7 @@ Then when the body element is rendered, the flags will be awaited and used to se
 export const onRequestGet = onRequestFactory({
   template: "/some-template",
   flags: {
-    'is-iphone': cfContext => cfContext.request.headers.get('user-agent').includes('iPhone'),
+    'is-iphone': ctx => ctx.cfContext.request.headers.get('user-agent').includes('iPhone'),
   },
   data: {
     post: getPost
@@ -336,7 +341,7 @@ You can use them to modify the response, to add cookies, or to change the header
 export const onRequestGet = onRequestFactory({
   template: "/some-template",
   postwares: [
-    (cfContext, rewriterContext, response) => {
+    (ctx, response) => {
       response.headers.set('Cache-Control', 'public, max-age=3600');
     },
   ],
@@ -353,8 +358,8 @@ You can also use a postware to deal with optimistic fallbacks
 export const onRequestGet = onRequestFactory({
   template: "/some-template",
   postwares: [
-    (cfContext, rewriterContext, response) => {
-      if (!(await rewriterContext.data.getPost)) {
+    (ctx, response) => {
+      if (!(await ctx.data.getPost)) {
         return new Response('Not found', { status: 404 });
       }
     },
@@ -401,14 +406,14 @@ export const onRequestGet = onRequestFactory({
 
 You can set extra rules that will be used to rewrite the response.
 
-It's an array of functions that accept the rewriter and the rewriterContext.
+It's an array of functions that accept the rewriter and the ctx.
 
 ```javascript
 // functions/some-path.js
 export const onRequestGet = onRequestFactory({
   template: "/some-template",
   rules: [
-    (rewriter, rewriterContext) => {
+    (rewriter, ctx) => {
       rewriter.on('img:not([alt])', (element) => {
         element.setAttribute('alt', '');
       });
@@ -418,4 +423,6 @@ export const onRequestGet = onRequestFactory({
 ```
 
 ### Templates
-it's an object whose keys are the names of the templates and whose values are the templates that can be used by other directives to render data
+it's an object whose keys are the names of the templates and whose values are the templates that can be used by other directives to render data.
+
+The values are dealt with the same way as the `template` field.

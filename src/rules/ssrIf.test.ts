@@ -6,13 +6,13 @@ import { ssrIf } from "./ssrIf";
 describe("ssrIf", () => {
   it("should remove the element if the condition is false", async () => {
     const rewriter = new HTMLRewriter();
-    const rewriterContext: RewriterContext = {
+    const ctx: RewriterContext = {
       data: {
         foo: false,
       },
     };
 
-    ssrIf(rewriter, rewriterContext);
+    ssrIf(rewriter, ctx);
 
     const result = await rewriter.transform('<div data-ssr-if="foo">foo</div>');
 

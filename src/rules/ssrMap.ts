@@ -2,17 +2,12 @@ import { HTMLRewriter } from "@cloudflare/workers-types";
 import { resolve } from "@/resolve";
 import { RewriterContext } from "types";
 
-async function ssrMapHeader(
-  rewriterContext: any,
-  type: any,
-  map: any,
-  attributes: any,
-) {
+async function ssrMapHeader(ctx: any, type: any, map: any, attributes: any) {
   let element = `<${type} `;
   let innerHTML = "";
 
   for (const [, field, attribute] of map.matchAll(/([.\w]+):([^,]+)/g)) {
-    const value = await resolve(rewriterContext.data, field);
+    const value = await resolve(ctx.data, field);
     if (value === undefined) {
       attributes["data-ssr-error"] = `field ${field} not found in data`;
       continue;
@@ -37,22 +32,19 @@ async function ssrMapHeader(
   return element + ">" + innerHTML + "</" + type + ">";
 }
 
-export function ssrMap(
-  rewriter: HTMLRewriter,
-  rewriterContext: RewriterContext,
-) {
+export function ssrMap(rewriter: HTMLRewriter, ctx: RewriterContext) {
   rewriter.on("[data-ssr-map]", {
     async element(element) {
-      if (rewriterContext.skip) {
+      if (ctx.skip) {
         return;
       }
       const map = element.getAttribute("data-ssr-map") as string;
       element.removeAttribute("data-ssr-map");
 
-      if (rewriterContext.headElements) {
-        rewriterContext.headElements.push(
+      if (ctx.headElements) {
+        ctx.headElements.push(
           ssrMapHeader(
-            rewriterContext,
+            ctx,
             element.tagName,
             map,
             Object.fromEntries(element.attributes),
@@ -65,7 +57,7 @@ export function ssrMap(
       let style = element.getAttribute("style") || "";
 
       for (const [, field, attribute] of map.matchAll(/([.\w]+):([^,]+)/g)) {
-        const value = await resolve(rewriterContext.data, field);
+        const value = await resolve(ctx.data, field);
         if (value === undefined) {
           element.setAttribute(
             "data-ssr-error",

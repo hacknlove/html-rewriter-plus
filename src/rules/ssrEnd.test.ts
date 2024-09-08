@@ -6,14 +6,14 @@ import { ssrEnd } from "./ssrEnd";
 describe("ssrEnd", () => {
   it("move some end elements to the end of the body", async () => {
     const rewriter = new HTMLRewriter();
-    const rewriterContext: RewriterContext = {
+    const ctx: RewriterContext = {
       data: {},
       clientSideData: {
         foo: "bar",
       },
     };
 
-    ssrEnd(rewriter, rewriterContext);
+    ssrEnd(rewriter, ctx);
 
     const result = await rewriter.transform(`<body></body>`);
 
