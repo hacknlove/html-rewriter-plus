@@ -1,8 +1,8 @@
-import { rewriterFactory } from "@/rewriter";
-import { RewriterContext } from "types";
+import { rewriterFactory } from "../rewriter.js";
+import { RewriterContext } from "types.js";
 import { HTMLRewriter } from "@cloudflare/workers-types";
-import { resolve } from "@/resolve";
-import { smallRules } from ".";
+import { resolve } from "../resolve.js";
+import { smallRules } from "./index.js";
 
 export function ssrForEach(rewriter: HTMLRewriter, ctx: RewriterContext) {
   rewriter.on("template[data-ssr-for]", {

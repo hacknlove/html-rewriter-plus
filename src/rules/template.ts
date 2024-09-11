@@ -1,6 +1,6 @@
 import { HTMLRewriter } from "@cloudflare/workers-types";
-import { RewriterContext } from "types";
-import { autoClose } from "./autoclose";
+import { RewriterContext } from "types.js";
+import { autoClose } from "./autoclose.js";
 
 export function ssrTemplate(rewriter: HTMLRewriter, ctx: RewriterContext) {
   let html: string = "";

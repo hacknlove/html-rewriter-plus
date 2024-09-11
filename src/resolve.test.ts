@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 
-import { resolve } from "./resolve";
+import { resolve } from "./resolve.js";
 
 describe("resolve", () => {
   it("should return undefined if path is null", async () => {

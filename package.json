@@ -2,11 +2,11 @@
   "name": "html-rewriter-plus",
   "version": "0.1.1-rc.0",
   "main": "dist/index.js",
+  "type": "module",
+
   "scripts": {
-    "build:commonjs": "rm -r ./dist/commonjs; tsc --project tsconfig.commonjs.json",
-    "build:esm": "rm -r ./dist/esm; tsc --project tsconfig.esm.json",
-    "build": "npm run build:commonjs; npm run build:esm",
-    "prepublish": "npm run build",
+    "build:test": "tsc --project tsconfig.esm.json",
+    "clean:test": "rm -r ./e2e/dist",
     "test": "vitest --coverage --ui",
     "lint": "eslint ./src --fix && tsc --noEmit",
     "format": "prettier --write \"**/*.ts\""

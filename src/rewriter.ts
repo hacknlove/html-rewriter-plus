@@ -1,4 +1,4 @@
-import { RewriterContext, Rule } from "types";
+import { RewriterContext, Rule } from "types.js";
 
 export function rewriterFactory(ctx: RewriterContext, rules: Array<Rule>) {
   // @ts-expect-error: HTMLRewriter is available only in the Cloudflare environment

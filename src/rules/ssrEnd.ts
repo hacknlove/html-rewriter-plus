@@ -1,5 +1,5 @@
 import { HTMLRewriter } from "@cloudflare/workers-types";
-import { RewriterContext } from "types";
+import { RewriterContext } from "types.js";
 
 export function ssrEnd(rewriter: HTMLRewriter, ctx: RewriterContext) {
   rewriter.onDocument({

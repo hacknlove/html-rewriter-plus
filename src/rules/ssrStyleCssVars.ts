@@ -1,6 +1,6 @@
 import { HTMLRewriter } from "@cloudflare/workers-types";
-import { resolve } from "../resolve";
-import { RewriterContext } from "types";
+import { resolve } from "../resolve.js";
+import { RewriterContext } from "types.js";
 
 async function elementToString(ctx: RewriterContext, vars: string) {
   let element = "<style>:root{";
