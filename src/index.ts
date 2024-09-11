@@ -6,14 +6,14 @@ import {
   CommonResponse,
   Rule,
   Template,
-} from "types";
-import { runPostwares } from "./postwares";
-import { isWebsocket } from "./isWebsocket";
-import { rewriterFactory } from "./rewriter";
-import { fullRules } from "./rules";
-import { getTemplateAsResponse, getTemplateAsString } from "./getTemplate";
+} from "types.js";
+import { runPostwares } from "./postwares.js";
+import { isWebsocket } from "./isWebsocket.js";
+import { rewriterFactory } from "./rewriter.js";
+import { fullRules } from "./rules/index.js";
+import { getTemplateAsResponse, getTemplateAsString } from "./getTemplate.js";
 
-export { setHeaders } from "./postwares/setHeaders";
+export { setHeaders } from "./postwares/setHeaders.js";
 
 export function onRequestFactory({
   template = undefined as Template,

@@ -1,6 +1,6 @@
-import { resolve } from "../resolve";
+import { resolve } from "../resolve.js";
 import { HTMLRewriter } from "@cloudflare/workers-types";
-import { RewriterContext } from "types";
+import { RewriterContext } from "types.js";
 
 export function ssrIf(rewriter: HTMLRewriter, ctx: RewriterContext) {
   rewriter.on("[data-ssr-if]", {

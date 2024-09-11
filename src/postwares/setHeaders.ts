@@ -1,4 +1,4 @@
-import { PostwareFunction } from "types";
+import { PostwareFunction } from "types.js";
 
 export function setHeaders(key: string, value: string): PostwareFunction {
   return async (_, response: Response) => {

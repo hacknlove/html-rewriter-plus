@@ -1,5 +1,5 @@
-import { HTMLRewriterStrings } from "@/test/HTMLRewriter";
-import { RewriterContext } from "types";
+import { HTMLRewriterStrings } from "../test/HTMLRewriter";
+import { RewriterContext } from "types.js";
 import { describe, it, expect } from "vitest";
 import { ssrHead } from "./head";
 

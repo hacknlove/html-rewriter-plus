@@ -1,11 +1,11 @@
-import { ssrMap } from "./ssrMap";
-import { ssrStyleCssVars } from "./ssrStyleCssVars";
-import { ssrFlags } from "./flags";
-import { ssrHead } from "./head";
-import { ssrEnd } from "./ssrEnd";
-import { ssrIf } from "./ssrIf";
-import { ssrTemplate } from "./template";
-import { ssrForEach } from "./forEach";
+import { ssrMap } from "./ssrMap.js";
+import { ssrStyleCssVars } from "./ssrStyleCssVars.js";
+import { ssrFlags } from "./flags.js";
+import { ssrHead } from "./head.js";
+import { ssrEnd } from "./ssrEnd.js";
+import { ssrIf } from "./ssrIf.js";
+import { ssrTemplate } from "./template.js";
+import { ssrForEach } from "./forEach.js";
 
 export const fullRules = [
   ssrMap,

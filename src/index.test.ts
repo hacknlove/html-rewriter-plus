@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { onRequestFactory } from "./index";
-import { HTMLRewriter } from "@/test/HTMLRewriter";
+import { HTMLRewriter } from "./test/HTMLRewriter";
 import { stubCfContext } from "./test/CfContext";
 
 global.HTMLRewriter = vi.fn().mockImplementation(() => new HTMLRewriter());

@@ -1,7 +1,7 @@
 import { HTMLRewriter } from "@cloudflare/workers-types";
-import { resolve } from "@/resolve";
-import { RewriterContext } from "types";
-import { autoClose } from "./autoclose";
+import { resolve } from "../resolve.js";
+import { RewriterContext } from "types.js";
+import { autoClose } from "./autoclose.js";
 
 async function ssrMapHeader(ctx: any, type: any, map: any, attributes: any) {
   let element = `<${type} `;

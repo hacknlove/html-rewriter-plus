@@ -1,6 +1,6 @@
 import { rewriterFactory } from "./rewriter";
 import { describe, it, expect, vi } from "vitest";
-import { HTMLRewriter } from "@/test/HTMLRewriter";
+import { HTMLRewriter } from "./test/HTMLRewriter";
 
 global.HTMLRewriter = vi.fn().mockImplementation(() => new HTMLRewriter());
 

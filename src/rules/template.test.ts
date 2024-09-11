@@ -1,5 +1,5 @@
 import { ssrTemplate } from "./template";
-import { HTMLRewriterStrings } from "@/test/HTMLRewriter";
+import { HTMLRewriterStrings } from "../test/HTMLRewriter";
 import { describe, it, expect } from "vitest";
 
 describe("ssrTemplate", () => {

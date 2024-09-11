@@ -1,4 +1,4 @@
-import { RewriterContext, Template } from "types";
+import { RewriterContext, Template } from "types.js";
 
 export async function getTemplateAsResponse(
   ctx: RewriterContext,

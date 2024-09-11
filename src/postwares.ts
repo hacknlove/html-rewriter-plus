@@ -1,4 +1,4 @@
-import { PostwareFunction, RewriterContext } from "types";
+import { PostwareFunction, RewriterContext } from "types.js";
 
 export async function runPostwares(
   ctx: RewriterContext,
