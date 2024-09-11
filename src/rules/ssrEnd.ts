@@ -4,12 +4,6 @@ import { RewriterContext } from "types";
 export function ssrEnd(rewriter: HTMLRewriter, ctx: RewriterContext) {
   rewriter.onDocument({
     async end(end) {
-      try {
-        await Promise.all(Object.values(ctx.data));
-      } catch (error) {
-        console.error(error);
-      }
-
       for (const [field, value] of Object.entries(ctx.clientSideData)) {
         ctx.clientSideData[field] = await value;
       }

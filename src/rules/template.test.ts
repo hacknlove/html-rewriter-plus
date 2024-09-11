@@ -1,10 +1,10 @@
 import { ssrTemplate } from "./template";
-import { HTMLRewriter } from "@/test/HTMLRewriter";
+import { HTMLRewriterStrings } from "@/test/HTMLRewriter";
 import { describe, it, expect } from "vitest";
 
 describe("ssrTemplate", () => {
   it("should add the template to the rewriter context", async () => {
-    const rewriter = new HTMLRewriter();
+    const rewriter = new HTMLRewriterStrings();
     const ctx = {
       templates: {},
     };
@@ -23,7 +23,7 @@ describe("ssrTemplate", () => {
   });
 
   it("includes attributes in the template", async () => {
-    const rewriter = new HTMLRewriter();
+    const rewriter = new HTMLRewriterStrings();
     const ctx = {
       templates: {},
     };
@@ -42,7 +42,7 @@ describe("ssrTemplate", () => {
   });
 
   it("deals with auto-closing tags", async () => {
-    const rewriter = new HTMLRewriter();
+    const rewriter = new HTMLRewriterStrings();
     const ctx = {
       templates: {},
     };
@@ -60,8 +60,8 @@ describe("ssrTemplate", () => {
     });
   });
 
-  it('includes text content in the template', async () => {
-    const rewriter = new HTMLRewriter();
+  it("includes text content in the template", async () => {
+    const rewriter = new HTMLRewriterStrings();
     const ctx = {
       templates: {},
     };
@@ -79,8 +79,8 @@ describe("ssrTemplate", () => {
     });
   });
 
-  it('includes comments in the template', async () => {
-    const rewriter = new HTMLRewriter();
+  it("includes comments in the template", async () => {
+    const rewriter = new HTMLRewriterStrings();
     const ctx = {
       templates: {},
     };
@@ -98,8 +98,8 @@ describe("ssrTemplate", () => {
     });
   });
 
-  it('includes nested elements in the template', async () => {
-    const rewriter = new HTMLRewriter();
+  it("includes nested elements in the template", async () => {
+    const rewriter = new HTMLRewriterStrings();
     const ctx = {
       templates: {},
     };
@@ -117,8 +117,8 @@ describe("ssrTemplate", () => {
     });
   });
 
-  it('includes text nodes in the root of the template', async () => {
-    const rewriter = new HTMLRewriter();
+  it("includes text nodes in the root of the template", async () => {
+    const rewriter = new HTMLRewriterStrings();
     const ctx = {
       templates: {},
     };

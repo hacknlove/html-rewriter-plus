@@ -1,11 +1,11 @@
-import { HTMLRewriter } from "@/test/HTMLRewriter";
+import { HTMLRewriterStrings } from "@/test/HTMLRewriter";
 import { RewriterContext } from "types";
 import { describe, it, expect } from "vitest";
 import { ssrHead } from "./head";
 
 describe("ssrHead", () => {
   it("move some head elements to the end of the head", async () => {
-    const rewriter = new HTMLRewriter();
+    const rewriter = new HTMLRewriterStrings();
     const ctx: RewriterContext = {};
 
     ssrHead(rewriter, ctx);

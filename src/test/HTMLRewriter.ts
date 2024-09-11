@@ -11,7 +11,7 @@ import {
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 
-export class HTMLRewriter {
+export class HTMLRewriterStrings {
   private elementHandlers: [selector: string, handlers: ElementHandlers][] = [];
   private documentHandlers: DocumentHandlers[] = [];
 
@@ -42,6 +42,47 @@ export class HTMLRewriter {
       await rewriter.write(encoder.encode(input));
       await rewriter.end();
       return output;
+    } finally {
+      rewriter.free();
+    }
+  }
+}
+
+export class HTMLRewriter {
+  private elementHandlers: [selector: string, handlers: ElementHandlers][] = [];
+  private documentHandlers: DocumentHandlers[] = [];
+
+  constructor(private readonly options?: RawHTMLRewriterOptions) {}
+
+  on(selector: string, handlers: ElementHandlers): this {
+    this.elementHandlers.push([selector, handlers]);
+    return this;
+  }
+
+  onDocument(handlers: DocumentHandlers): this {
+    this.documentHandlers.push(handlers);
+    return this;
+  }
+
+  async transform(input: Response): Promise<Response> {
+    let output = "";
+    const rewriter = new RawHTMLRewriter((chunk) => {
+      output += decoder.decode(chunk);
+    }, this.options);
+    for (const [selector, handlers] of this.elementHandlers) {
+      rewriter.on(selector, handlers);
+    }
+    for (const handlers of this.documentHandlers) {
+      rewriter.onDocument(handlers);
+    }
+    try {
+      await rewriter.write(encoder.encode(await input.text()));
+      await rewriter.end();
+      return new Response(output, {
+        status: input.status,
+        statusText: input.statusText,
+        headers: input.headers,
+      });
     } finally {
       rewriter.free();
     }

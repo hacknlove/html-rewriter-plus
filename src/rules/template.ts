@@ -1,24 +1,6 @@
 import { HTMLRewriter } from "@cloudflare/workers-types";
 import { RewriterContext } from "types";
-
-const autoClose = [
-  "img",
-  "input",
-  "link",
-  "br",
-  "meta",
-  "hr",
-  "embed",
-  "source",
-  "area",
-  "col",
-  "base",
-  "track",
-  "param",
-  "command",
-  "keygen",
-  "wbr",
-];
+import { autoClose } from "./autoclose";
 
 export function ssrTemplate(rewriter: HTMLRewriter, ctx: RewriterContext) {
   let html: string = "";

@@ -1,6 +1,7 @@
 import { HTMLRewriter } from "@cloudflare/workers-types";
 import { resolve } from "@/resolve";
 import { RewriterContext } from "types";
+import { autoClose } from "./autoclose";
 
 async function ssrMapHeader(ctx: any, type: any, map: any, attributes: any) {
   let element = `<${type} `;
@@ -26,7 +27,11 @@ async function ssrMapHeader(ctx: any, type: any, map: any, attributes: any) {
   }
 
   for (const key in attributes) {
-    element += key + "=" + attributes[key] + " ";
+    element += key + '="' + attributes[key] + '" ';
+  }
+
+  if (autoClose.includes(type) && !innerHTML) {
+    return element + "/>";
   }
 
   return element + ">" + innerHTML + "</" + type + ">";
