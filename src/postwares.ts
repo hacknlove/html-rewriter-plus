@@ -1,11 +1,11 @@
-import { PostwareFunction, CommonResponse, RewriterContext } from "types";
+import { PostwareFunction, RewriterContext } from "types";
 
 export async function runPostwares(
   ctx: RewriterContext,
-  inputResponse: CommonResponse,
+  inputResponse: Response,
   postwares: Array<PostwareFunction>,
 ) {
-  let outputResponse = new Response(inputResponse.body, inputResponse);
+  let outputResponse = inputResponse.clone();
 
   for (const postwareFunction of postwares) {
     outputResponse =

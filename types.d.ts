@@ -39,6 +39,7 @@ export type Template =
   | undefined
   | null
   | string
+  | Response
   | Promise<string>
   | Promise<Response>
   | ((context: RewriterContext) => string | Promise<string>);

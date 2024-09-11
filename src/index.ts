@@ -11,7 +11,7 @@ import { runPostwares } from "./postwares";
 import { isWebsocket } from "./isWebsocket";
 import { rewriterFactory } from "./rewriter";
 import { fullRules } from "./rules";
-import { getTemplate } from "./getTemplate";
+import { getTemplateAsResponse, getTemplateAsString } from "./getTemplate";
 
 export { setHeaders } from "./postwares/setHeaders";
 
@@ -43,7 +43,7 @@ export function onRequestFactory({
       any: { ...any },
     };
 
-    ctx.pageRequest = getTemplate(ctx, template);
+    ctx.pageRequest = getTemplateAsResponse(ctx, template);
 
     const rewriter = rewriterFactory(ctx, fullRules);
 
@@ -68,7 +68,7 @@ export function onRequestFactory({
 
     for (const [field, value] of Object.entries(ctx.templates)) {
       if (typeof value === "function") {
-        ctx.templates[field] = getTemplate(ctx, value);
+        ctx.templates[field] = getTemplateAsString(ctx, value);
       }
     }
 
@@ -83,7 +83,7 @@ export function onRequestFactory({
     ) as CommonResponse;
 
     if (postware.length) {
-      return runPostwares(ctx, transform, postware);
+      return runPostwares(ctx, await transform, postware);
     }
 
     return transform;

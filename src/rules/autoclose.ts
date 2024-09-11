@@ -1,0 +1,18 @@
+export const autoClose = [
+  "img",
+  "input",
+  "link",
+  "br",
+  "meta",
+  "hr",
+  "embed",
+  "source",
+  "area",
+  "col",
+  "base",
+  "track",
+  "param",
+  "command",
+  "keygen",
+  "wbr",
+];

@@ -1,11 +1,11 @@
-import { HTMLRewriter } from "@/test/HTMLRewriter";
+import { HTMLRewriterStrings } from "@/test/HTMLRewriter";
 import { RewriterContext } from "types";
 import { describe, it, expect } from "vitest";
 import { ssrEnd } from "./ssrEnd";
 
 describe("ssrEnd", () => {
   it("move some end elements to the end of the body", async () => {
-    const rewriter = new HTMLRewriter();
+    const rewriter = new HTMLRewriterStrings();
     const ctx: RewriterContext = {
       data: {},
       clientSideData: {

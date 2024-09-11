@@ -12,11 +12,13 @@ export function ssrForEach(rewriter: HTMLRewriter, ctx: RewriterContext) {
       }
       const key = element.getAttribute("data-ssr-for") as string;
       const field = element.getAttribute("data-ssr-in") as string;
-      const template = element.getAttribute(
+      const templateName = element.getAttribute(
         "data-ssr-render-template",
       ) as string;
 
       const items = await resolve(ctx.data, field);
+
+      const mainTemplate = await ctx.templates[templateName];
 
       for (const item of items) {
         if (!item) {
@@ -29,11 +31,13 @@ export function ssrForEach(rewriter: HTMLRewriter, ctx: RewriterContext) {
 
         const rewriter = rewriterFactory(newRewriterContext, smallRules);
 
-        const templateHtml = ctx.templates[item.template ?? template];
+        const template = (
+          item.templateName
+            ? await ctx.templates[item.templateName]
+            : mainTemplate
+        ) as string;
 
-        const response = new Response(templateHtml);
-
-        const output = await rewriter.transform(response).text();
+        const output = await rewriter.transform(new Response(template)).text();
 
         element.before(output, { html: true });
       }

@@ -3,6 +3,10 @@
   "version": "0.1.1-rc.0",
   "main": "dist/index.js",
   "scripts": {
+    "build:commonjs": "rm -r ./dist/commonjs; tsc --project tsconfig.commonjs.json",
+    "build:esm": "rm -r ./dist/esm; tsc --project tsconfig.esm.json",
+    "build": "npm run build:commonjs; npm run build:esm",
+    "prepublish": "npm run build",
     "test": "vitest --coverage --ui",
     "lint": "eslint ./src --fix && tsc --noEmit",
     "format": "prettier --write \"**/*.ts\""
@@ -20,6 +24,7 @@
     "eslint-plugin-prettier": "^5.2.1",
     "globals": "^15.9.0",
     "html-rewriter-wasm": "^0.4.1",
+    "miniflare": "^3.20240821.1",
     "prettier": "^3.3.3",
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.3.0",

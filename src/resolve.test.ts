@@ -13,6 +13,11 @@ describe("resolve", () => {
     expect(result).toBe(undefined);
   });
 
+  it("should return undefined if deep path is not found", async () => {
+    const result = await resolve({ foo: {} }, "foo.bar");
+    expect(result).toBe(undefined);
+  });
+
   it("should return value if path is found", async () => {
     const result = await resolve({ foo: { bar: "baz" } }, "foo.bar");
     expect(result).toBe("baz");
