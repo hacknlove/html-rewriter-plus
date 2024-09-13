@@ -6,8 +6,9 @@
   "scripts": {
     "build:test": "tsc --project tsconfig.esm.json",
     "clean:test": "rm -r ./e2e/dist",
-    "test": "npm run test:unit",
+    "test": "tsc --project tsconfig.esm.json --noEmit && vitest --config ./vitest.unit.config.mts && vitest --config ./vitest.e2e.config.mts",
     "test:unit": "vitest --coverage --ui --config ./vitest.unit.config.mts",
+    "test:e2e": "vitest --ui --config ./vitest.e2e.config.mts",
     "lint": "eslint ./src --fix && tsc --noEmit",
     "format": "prettier --write \"**/*.ts\""
   },
@@ -37,5 +38,8 @@
       "import": "./src/index.ts",
       "require": "./dist/commonjs/index.js"
     }
+  },
+  "dependencies": {
+    "htmlfy": "^0.2.1"
   }
 }

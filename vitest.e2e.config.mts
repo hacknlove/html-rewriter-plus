@@ -10,10 +10,12 @@ export default defineConfig({
     },
   },
   test: {
-    root: "./src",
-    coverage: {
-      provider: "istanbul"
-    },
+    root: "./e2e",
+    globalSetup: './vitest.globalSetup.mts',
+    forceRerunTriggers: [
+      './e2e/tests/**/*.html',
+      './e2e/tests/**/*.js',
+    ],
     watch: false
   }
 });
