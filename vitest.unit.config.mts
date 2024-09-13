@@ -10,6 +10,7 @@ export default defineConfig({
     },
   },
   test: {
+    root: "./src",
     globalSetup: './vitest.globalSetup.mts',
     coverage: {
       provider: "istanbul"

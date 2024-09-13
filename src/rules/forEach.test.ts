@@ -1,26 +1,45 @@
 import { ssrForEach } from "./forEach";
 import { describe, it, expect } from "vitest";
 import { HTMLRewriterStrings } from "../test/HTMLRewriter";
-import { Miniflare } from "miniflare";
+import { ParsedHTMLRewriter } from "@worker-tools/parsed-html-rewriter";
+
+global.HTMLRewriter = ParsedHTMLRewriter;
 
 describe("ssrForEach", () => {
   it("should render a template for each item in the array", async () => {
-    const mf = new Miniflare({
-      modules: true,
-      modulesRules: [
-        {
-          type: "ESModule",
-          include: ["**/*.js"],
-        },
-      ],
-      scriptPath: "./e2e/forEach.e2e.mjs",
-      port: 8788,
-      host: "localhost",
-    });
+    const rewriter = new ParsedHTMLRewriter();
 
-    const response = await mf.dispatchFetch("http://localhost:8788/");
-    const body = await response.text();
-    expect(body).toBe(`<div>Item 1</div><div>Item 2</div><div>Item 3</div>`);
+    const ctx = {
+      data: {
+        items: [
+          { title: "Item 1" },
+          { title: "Item 2" },
+          { title: "Item 3" },
+          { title: "Item 4", templateName: "item2" },
+          null,
+        ],
+      },
+      templates: {
+        item: '<div data-ssr-map="item.title:innerText"></div>',
+        item2: '<span data-ssr-map="item.title:innerText"></span>',
+      },
+      rules: [],
+    };
+
+    // @ts-expect-error Testing purposes
+    ssrForEach(rewriter, ctx);
+
+    const result = await rewriter
+      .transform(
+        new Response(
+          '<body><template data-ssr-for="item" data-ssr-in="items" data- data-ssr-render-template="item"></template></body>',
+        ),
+      )
+      .text();
+
+    expect(result).toBe(
+      "<body><div>Item 1</div><div>Item 2</div><div>Item 3</div><span>Item 4</span></body>",
+    );
   });
 
   it("should skip if ctx.skip is true", async () => {

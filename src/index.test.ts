@@ -20,15 +20,19 @@ describe("onRequestFactory", () => {
       middlewares: [vi.fn()],
       data: {
         a: vi.fn(),
+        foo: "foo",
       },
       flags: {
         b: vi.fn(),
+        foo: "foo",
       },
       templates: {
         d: vi.fn(() => "<div></div>"),
+        foo: "foo",
       },
       clientSideData: {
         c: vi.fn(),
+        foo: "foo",
       },
       rules: [vi.fn()],
       postware: [vi.fn((ctx, response) => response)],
@@ -37,7 +41,7 @@ describe("onRequestFactory", () => {
     const cfContext = stubCfContext();
     const response = await onRequest(cfContext);
     expect(await response.text()).toBe(
-      "<div></div><script>window.data={};document.dispatchEvent(new Event('on-data-loaded'))</script>",
+      '<div></div><script>window.data={"foo":"foo"};document.dispatchEvent(new Event(\'on-data-loaded\'))</script>',
     );
   });
 

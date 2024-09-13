@@ -3,11 +3,11 @@
   "version": "0.1.1-rc.0",
   "main": "dist/index.js",
   "type": "module",
-
   "scripts": {
     "build:test": "tsc --project tsconfig.esm.json",
     "clean:test": "rm -r ./e2e/dist",
-    "test": "vitest --coverage --ui",
+    "test": "npm run test:unit",
+    "test:unit": "vitest --coverage --ui --config ./vitest.unit.config.mts",
     "lint": "eslint ./src --fix && tsc --noEmit",
     "format": "prettier --write \"**/*.ts\""
   },
@@ -19,6 +19,7 @@
     "@typescript-eslint/parser": "^8.3.0",
     "@vitest/coverage-istanbul": "^2.0.5",
     "@vitest/ui": "^2.0.5",
+    "@worker-tools/parsed-html-rewriter": "^0.1.11",
     "eslint": "^9.9.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
