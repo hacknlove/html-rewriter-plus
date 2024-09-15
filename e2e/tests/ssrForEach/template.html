@@ -1,0 +1,18 @@
+<html>
+    <body>
+        <!-- this template overrides the template set in the handler with the same name -->
+        <template data-ssr-name="thisOneFromHtml">
+            <span data-ssr-map="word:innerText"></span>
+        </template>
+
+        <!-- this for will use the template from set in the html -->
+         <p>
+             <template data-ssr-for="word" data-ssr-in="words" data-ssr-render-template="thisOneFromHtml"></template>
+         </p>
+
+        <!-- this for will use the template from set in the handler -->
+         <p>
+             <template data-ssr-for="word" data-ssr-in="words" data-ssr-render-template="thisOneFromHandler"></template>
+         </p>
+    </body>
+</html>

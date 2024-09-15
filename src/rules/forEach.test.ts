@@ -1,7 +1,7 @@
 import { ssrForEach } from "./forEach";
 import { describe, it, expect } from "vitest";
 import { HTMLRewriterStrings } from "../test/HTMLRewriter";
-import { ParsedHTMLRewriter } from "@worker-tools/parsed-html-rewriter";
+import { ParsedHTMLRewriter } from "@worker-tools/parsed-html-rewriter"; // Every other test is using html-rewriter-wasm, but the forEach test is using parsed-html-rewriter. The reason is that html-rewriter-wasm is erroring on rewriter recursion. But it works fine with parsed-html-rewriter and more importantly in wrangler and in production. So, I'm using parsed-html-rewriter for this test. The rest will use html-rewriter-wasm, because it's faster and more similar to the actual Cloudflare Workers runtime.
 
 global.HTMLRewriter = ParsedHTMLRewriter;
 

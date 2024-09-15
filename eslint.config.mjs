@@ -4,7 +4,7 @@ import parser from '@typescript-eslint/parser';
 
 export default [
   {
-    ignores: ['node_modules', 'dist'],
+    ignores: ['node_modules', 'e2e/dist'],
     files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
       parser: parser,

@@ -8,8 +8,8 @@
     "clean:test": "rm -r ./e2e/dist",
     "test": "tsc --project tsconfig.esm.json --noEmit && vitest --config ./vitest.unit.config.mts && vitest --config ./vitest.e2e.config.mts",
     "test:unit": "vitest --coverage --ui --config ./vitest.unit.config.mts",
-    "test:e2e": "vitest --ui --config ./vitest.e2e.config.mts",
-    "lint": "eslint ./src --fix && tsc --noEmit",
+    "test:e2e": "vitest --ui --watch --config ./vitest.e2e.config.mts",
+    "lint": "eslint ./src ./e2e --fix && tsc --noEmit",
     "format": "prettier --write \"**/*.ts\""
   },
   "devDependencies": {
