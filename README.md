@@ -1,6 +1,6 @@
 # HTMLRewriter+
 
-Static generated sites with dynamic content.
+Static generated sites with dynamic content injected on the fly, and they stream to the client.
 
 ## Install
 
